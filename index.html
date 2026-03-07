@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PUBLIC GRUP JEAN OFFICIAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+*{-webkit-user-select:none;user-select:none;box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--neon:#00f2ff;--deep:#0044ff;--shadow:rgba(0,242,255,0.4);--pink:#ff007f;--purple:#7000ff}
+body,html{height:100%;width:100%;background:#000;color:var(--neon);font-family:'Share Tech Mono',monospace;overflow:hidden}
+#bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* BOOT */
+#boot-loader{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity 1s ease,transform 1s ease}
+#boot-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#boot-overlay-text{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
+.boot-progress{width:180px;height:2px;background:rgba(0,242,255,0.15);border-radius:3px;overflow:hidden}
+.boot-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--neon));width:0%;animation:bootFill 2.8s ease-out forwards;box-shadow:0 0 10px var(--neon)}
+@keyframes bootFill{to{width:100%}}
+
+/* LOGIN */
+#login-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:5000;display:none;justify-content:center;align-items:center}
+.login-card{border:1px solid rgba(0,242,255,0.5);padding:32px 28px;border-radius:28px;width:300px;text-align:center;background:rgba(0,8,18,0.97);backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(0,242,255,0.15);animation:cardIn .4s ease}
+@keyframes cardIn{from{transform:scale(0.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.login-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--neon));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px;box-shadow:0 0 30px rgba(0,242,255,0.3)}
+input:not([type=range]){background:rgba(255,255,255,0.06);border:1px solid rgba(0,242,255,0.3);color:white;padding:12px 16px;margin:10px 0;width:100%;outline:none;text-align:center;font-family:inherit;border-radius:14px;user-select:text!important;font-size:.85rem;transition:border-color .2s}
+input:not([type=range]):focus{border-color:var(--neon)}
+.login-btn{background:linear-gradient(135deg,var(--purple),var(--neon));border:none;padding:13px;width:100%;border-radius:14px;font-weight:bold;color:#fff;cursor:pointer;font-family:inherit;letter-spacing:2px;font-size:.8rem;margin-top:4px;transition:box-shadow .2s}
+.login-btn:hover{box-shadow:0 0 25px rgba(0,242,255,0.4)}
+
+/* APP */
+.app-ui{position:relative;z-index:10;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.chat-box{display:none;flex-direction:column;width:92%;height:88vh;background:rgba(0,12,25,0.35);backdrop-filter:blur(14px);border:1px solid rgba(0,242,255,0.3);border-radius:28px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.9)}
+
+/* HEADER */
+header{padding:10px 14px;background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(0,242,255,0.15);display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.header-left{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.header-title{font-size:.72rem;font-weight:bold;letter-spacing:1.5px;text-align:center;flex:1;line-height:1.3}
+.header-title span{display:block;font-size:.52rem;opacity:.45;letter-spacing:3px}
+.online-badge{display:flex;align-items:center;gap:4px;font-size:.6rem;color:#00ffaa;background:rgba(0,255,170,0.08);padding:3px 7px;border-radius:20px;border:1px solid rgba(0,255,170,0.25);flex-shrink:0}
+.online-dot{width:5px;height:5px;border-radius:50%;background:#00ffaa;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+#typing-status{font-size:.58rem;color:#00ffaa;height:13px;text-align:center;transition:opacity .3s}
+#typing-status .tdots span{animation:tdot 1.2s infinite;opacity:0;display:inline-block}
+#typing-status .tdots span:nth-child(2){animation-delay:.2s}
+#typing-status .tdots span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+.hdr-btn{width:28px;height:28px;border-radius:9px;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;border:1px solid}
+.hdr-tiktok{background:rgba(0,242,255,0.1);border-color:rgba(0,242,255,0.35);color:var(--neon)}
+.hdr-sc{background:rgba(255,85,0,0.1);border-color:rgba(255,85,0,0.35);color:#ff5500}
+.hdr-tools{background:linear-gradient(135deg,rgba(112,0,255,.2),rgba(255,0,127,.2));border-color:rgba(255,0,127,.4);color:var(--pink)}
+
+/* CHAT */
+#chat-win{flex:1;padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+#chat-win::-webkit-scrollbar{display:none}
+.msg{padding:10px 14px;border-radius:18px;max-width:82%;font-size:.84rem;line-height:1.45;position:relative;animation:msgIn .25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg.me{background:linear-gradient(135deg,#0033cc,#0055ff);align-self:flex-end;color:#fff;border-bottom-right-radius:4px;box-shadow:0 4px 14px rgba(0,68,255,.4)}
+.msg.ot{background:rgba(255,255,255,.09);align-self:flex-start;color:#fff;border-bottom-left-radius:4px}
+.sender-label{font-size:.62rem;font-weight:bold;margin-bottom:3px;display:block}
+.reply-node{font-size:.72rem;background:rgba(0,0,0,.45);padding:7px;border-radius:9px;margin-bottom:7px;border-left:3px solid var(--neon);opacity:.8}
+.msg-time{font-size:.52rem;opacity:.4;margin-top:4px;display:block;text-align:right}
+.msg.ot .msg-time{text-align:left}
+
+/* REACTIONS */
+.reactions-bar{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
+.react-chip{font-size:.68rem;background:rgba(0,0,0,.4);border:1px solid rgba(0,242,255,.25);padding:2px 6px;border-radius:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:3px}
+.react-chip:hover,.react-chip.mine{background:rgba(0,242,255,.18);border-color:var(--neon)}
+
+/* REACTION POPUP (emoji + sticker tabs) */
+.reaction-popup{position:absolute;background:rgba(0,12,25,0.97);border:1px solid rgba(0,242,255,.35);border-radius:18px;padding:8px;display:none;z-index:300;backdrop-filter:blur(22px);box-shadow:0 8px 30px rgba(0,0,0,.9);bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:220px}
+.reaction-popup.show{display:block}
+.rp-tabs{display:flex;gap:4px;margin-bottom:7px}
+.rp-tab{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:5px;font-size:.62rem;cursor:pointer;text-align:center;transition:all .2s;color:rgba(255,255,255,.6)}
+.rp-tab.active{background:rgba(0,242,255,.15);border-color:var(--neon);color:var(--neon)}
+.rp-emoji-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.react-opt{font-size:1.3rem;cursor:pointer;transition:transform .15s;padding:2px;border-radius:6px}
+.react-opt:hover{transform:scale(1.35);background:rgba(0,242,255,.1)}
+.rp-sticker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.stk-opt{font-size:1.5rem;cursor:pointer;text-align:center;padding:4px;border-radius:8px;transition:all .15s;border:1px solid transparent}
+.stk-opt:hover{background:rgba(0,242,255,.1);border-color:rgba(0,242,255,.3);transform:scale(1.2)}
+
+/* STICKER MESSAGE */
+.msg-sticker{font-size:2.8rem;line-height:1;display:block;margin:2px 0}
+
+
+
+
+
+
+#reply-bar{display:none;align-items:center;gap:8px;padding:7px 14px;background:rgba(0,242,255,.07);border-top:1px solid rgba(0,242,255,.2);flex-shrink:0;animation:fadeUp .2s ease}
+#reply-bar.show{display:flex}
+#reply-bar-icon{color:var(--neon);font-size:.8rem;flex-shrink:0}
+#reply-bar-text{flex:1;font-size:.62rem;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+#reply-bar-name{color:var(--neon);font-weight:bold}
+#reply-cancel{background:none;border:none;color:rgba(0,242,255,.5);font-size:.85rem;cursor:pointer;padding:0 4px;flex-shrink:0;transition:color .2s}
+#reply-cancel:hover{color:var(--neon)}
+
+
+/* SCROLL BTN */
+#scroll-btn{position:absolute;right:16px;bottom:200px;background:var(--neon);color:#000;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;display:none;box-shadow:0 0 15px var(--shadow);z-index:50}
+#scroll-btn.show{display:flex;align-items:center;justify-content:center}
+
+/* SC MINI PLAYER */
+#sc-player-bar{display:none;align-items:center;gap:9px;padding:7px 16px;background:rgba(18,6,0,.97);border-top:1px solid rgba(255,85,0,.25);flex-shrink:0}
+#sc-player-bar.show{display:flex}
+#sc-player-title{font-size:.58rem;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ff8c55}
+.sc-pp-btn{background:none;border:none;color:#ff5500;font-size:.95rem;cursor:pointer}
+.sc-prog-wrap{flex:1;height:3px;background:rgba(255,85,0,.2);border-radius:3px;cursor:pointer}
+.sc-prog-fill{height:100%;background:#ff5500;border-radius:3px;width:0%;transition:width .5s linear;box-shadow:0 0 5px #ff5500}
+
+/* MUSIC BAR */
+.music-bar{padding:9px 16px;background:rgba(0,0,0,.85);display:flex;align-items:center;gap:10px;border-top:1px solid rgba(0,242,255,.1);flex-shrink:0}
+#track-name{font-size:.6rem;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-progress-wrap{flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:3px;cursor:pointer}
+.music-progress-bar{height:100%;background:var(--neon);border-radius:3px;width:0%;transition:width .5s linear;box-shadow:0 0 5px var(--neon)}
+
+/* INPUT AREA */
+.input-area{padding:10px 12px;background:rgba(0,0,0,.85);display:flex;gap:8px;align-items:center;position:relative;flex-shrink:0;border-top:1px solid rgba(0,242,255,.08)}
+.input-wrap{flex:1;display:flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(0,242,255,.2);border-radius:22px;padding:0 14px;gap:8px;transition:border-color .2s}
+.input-wrap:focus-within{border-color:rgba(0,242,255,.5)}
+#m-input{flex:1;background:transparent;border:none;padding:11px 0;color:white;outline:none;user-select:text!important;font-family:inherit;font-size:.82rem}
+#m-input::placeholder{color:rgba(0,242,255,.3)}
+.emoji-trigger{color:var(--neon);font-size:1.05rem;cursor:pointer;opacity:.6;transition:opacity .2s;flex-shrink:0}
+.emoji-trigger:hover{opacity:1}
+
+/* SEND BUTTON */
+#send-btn{width:42px;height:42px;border-radius:14px;flex-shrink:0;background:linear-gradient(135deg,var(--purple),var(--pink));border:none;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(255,0,127,.4);transition:all .2s cubic-bezier(.175,.885,.32,1.275)}
+#send-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(255,0,127,.6)}
+#send-btn:active{transform:scale(.92)}
+#send-btn.sending{animation:sendPop .3s ease}
+@keyframes sendPop{0%{transform:scale(1)}45%{transform:scale(1.2) rotate(12deg)}100%{transform:scale(1)}}
+@keyframes idpls{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,221,87,.4)}50%{opacity:.7;box-shadow:0 0 8px rgba(255,221,87,.5)}}
+
+/* EMOJI PICKER */
+.emoji-picker{position:absolute;bottom:64px;left:12px;background:rgba(0,10,20,.98);border:1px solid rgba(0,242,255,.35);border-radius:16px;padding:12px;display:none;flex-wrap:wrap;gap:6px;width:272px;z-index:100;backdrop-filter:blur(22px);box-shadow:0 10px 40px rgba(0,0,0,.9);animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rflash{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}70%{opacity:.9;transform:translate(-50%,-50%) scale(1.05)}100%{opacity:0;transform:translate(-50%,-50%) scale(.95)}}
+.emoji-picker.show{display:flex}
+.emoji-btn{font-size:1.25rem;cursor:pointer;padding:3px;border-radius:7px;transition:transform .15s}
+.emoji-btn:hover{transform:scale(1.3);background:rgba(0,242,255,.1)}
+.emoji-category{width:100%;font-size:.52rem;color:rgba(0,242,255,.45);letter-spacing:2px;padding:2px 0}
+
+/* STICKER PANEL */
+.sticker-panel{position:absolute;bottom:64px;left:12px;background:rgba(0,10,20,.98);border:1px solid rgba(0,242,255,.35);border-radius:16px;padding:12px;display:none;z-index:101;backdrop-filter:blur(22px);box-shadow:0 10px 40px rgba(0,0,0,.9);width:272px;animation:fadeUp .2s ease}
+.sticker-panel.show{display:block}
+.sticker-panel-title{font-size:.55rem;color:rgba(0,242,255,.5);letter-spacing:2px;margin-bottom:8px}
+.stk-categories{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.stk-cat-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:4px 8px;font-size:.58rem;cursor:pointer;color:rgba(255,255,255,.6);transition:all .2s}
+.stk-cat-btn.active{background:rgba(0,242,255,.15);border-color:var(--neon);color:var(--neon)}
+.stk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:200px;overflow-y:auto;scrollbar-width:none}
+.stk-grid::-webkit-scrollbar{display:none}
+.stk-item{font-size:1.8rem;text-align:center;cursor:pointer;padding:4px;border-radius:8px;transition:all .15s;border:1px solid transparent}
+.stk-item:hover{background:rgba(0,242,255,.1);border-color:rgba(0,242,255,.3);transform:scale(1.2)}
+
+/* SPINNER */
+.sp{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.15);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;margin-right:5px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SYS MSG */
+.sys-msg{text-align:center;font-size:.62rem;color:rgba(0,242,255,.4);padding:5px 15px;background:rgba(0,242,255,.05);border-radius:20px;align-self:center}
+
+/* MODAL BASE */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:8000;display:none;justify-content:center;align-items:center;padding:16px}
+.modal-overlay.show{display:flex}
+.m-card{border-radius:24px;padding:22px 20px;width:100%;max-width:340px;max-height:88vh;backdrop-filter:blur(22px);animation:cardIn .3s ease;display:flex;flex-direction:column;gap:13px;overflow:hidden}
+.m-head{display:flex;align-items:center;justify-content:space-between}
+.m-title{font-size:.74rem;letter-spacing:2px}
+.m-close{font-size:1.05rem;cursor:pointer;opacity:.5;transition:opacity .2s}
+.m-close:hover{opacity:1}
+.m-row{display:flex;gap:8px}
+.m-input{flex:1;background:rgba(255,255,255,.06);color:white;padding:10px 13px;outline:none;font-family:inherit;font-size:.75rem;border-radius:12px;user-select:text!important;border:1px solid rgba(255,255,255,.12);transition:border-color .2s;margin:0}
+.m-textarea{width:100%;background:rgba(255,255,255,.06);color:white;padding:10px 13px;outline:none;font-family:inherit;font-size:.75rem;border-radius:12px;user-select:text!important;border:1px solid rgba(255,255,255,.12);resize:none;height:85px}
+.m-btn{border:none;padding:11px;width:100%;border-radius:13px;font-family:inherit;font-size:.77rem;font-weight:bold;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.m-go{border:none;padding:10px 13px;border-radius:12px;font-family:inherit;font-size:.72rem;font-weight:bold;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:box-shadow .2s}
+.m-status{font-size:.62rem;min-height:14px}
+.m-scroll{overflow-y:auto;display:flex;flex-direction:column;gap:9px;scrollbar-width:none}
+.m-scroll::-webkit-scrollbar{display:none}
+.m-result{font-size:.7rem;line-height:1.7;overflow-y:auto;max-height:220px;scrollbar-width:none}
+.m-result::-webkit-scrollbar{display:none}
+
+/* DL BUTTONS */
+.dl-btns{display:flex;flex-direction:column;gap:7px}
+.dl-btn{display:flex;align-items:center;gap:9px;background:rgba(0,242,255,.07);border:1px solid rgba(0,242,255,.25);color:var(--neon);padding:10px 14px;border-radius:11px;font-family:inherit;font-size:.7rem;cursor:pointer;text-decoration:none;transition:all .2s;letter-spacing:1px}
+.dl-btn:hover{transform:translateX(3px);filter:brightness(1.2)}
+.dl-btn.green{border-color:rgba(0,255,170,.4);color:#00ffaa;background:rgba(0,255,170,.07)}
+
+/* SC TRACK */
+.sc-track{display:flex;gap:9px;align-items:center;background:rgba(255,85,0,.06);border:1px solid rgba(255,85,0,.18);border-radius:13px;padding:9px 11px;cursor:pointer;transition:all .2s}
+.sc-track:hover{background:rgba(255,85,0,.14);border-color:#ff5500;transform:translateX(3px)}
+.sc-art{width:44px;height:44px;border-radius:9px;object-fit:cover;border:1px solid rgba(255,85,0,.25);flex-shrink:0;background:rgba(255,85,0,.1)}
+.sc-meta{flex:1;overflow:hidden}
+.sc-track-title{font-size:.7rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-track-artist{font-size:.6rem;color:rgba(255,85,0,.8);margin-top:2px}
+.sc-track-dur{font-size:.55rem;color:rgba(255,255,255,.28);margin-top:2px}
+.sc-actions{display:flex;flex-direction:column;gap:5px}
+.sc-play-btn{background:#ff5500;border:none;width:26px;height:26px;border-radius:50%;color:#fff;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;transition:box-shadow .2s}
+.sc-play-btn:hover{box-shadow:0 0 10px rgba(255,85,0,.7)}
+.sc-dl-lnk{background:rgba(255,85,0,.14);border:1px solid rgba(255,85,0,.28);color:#ff5500;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.62rem;display:flex;align-items:center;justify-content:center;transition:all .2s;text-decoration:none}
+.sc-dl-lnk:hover{background:rgba(255,85,0,.3)}
+
+/* TOOLS PANEL */
+#tools-overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:8500;display:none;flex-direction:column;backdrop-filter:blur(22px)}
+#tools-overlay.show{display:flex}
+.tools-hdr{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,0,127,.2);flex-shrink:0}
+.tools-hdr-title{font-family:'Orbitron',sans-serif;font-size:.78rem;letter-spacing:3px;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tools-close{background:rgba(255,0,127,.15);border:1px solid rgba(255,0,127,.35);color:var(--pink);width:32px;height:32px;border-radius:10px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.tools-close:hover{background:rgba(255,0,127,.3)}
+.tools-grid-wrap{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
+.tools-grid-wrap::-webkit-scrollbar{display:none}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tool-card{background:rgba(20,8,30,.7);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--cc,#fff),transparent);opacity:.4}
+.tool-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.tool-card:active{transform:translateY(0)}
+.tool-icon-wrap{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.tool-label{font-size:.57rem;font-family:'Orbitron',sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.85);line-height:1.3;text-align:center}
+
+/* IMG GRID */
+.img-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;overflow-y:auto;max-height:260px;scrollbar-width:none}
+.img-grid::-webkit-scrollbar{display:none}
+.grid-img{width:100%;border-radius:10px;object-fit:cover;aspect-ratio:1;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:transform .2s}
+.grid-img:hover{transform:scale(1.04)}
+
+/* SELECT */
+select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:white;padding:10px 13px;border-radius:12px;font-family:inherit;font-size:.75rem;outline:none}
+
+/* VOICE BTN */
+#voice-btn{width:42px;height:42px;border-radius:14px;flex-shrink:0;background:rgba(0,242,255,.12);border:1px solid rgba(0,242,255,.3);color:var(--neon);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#voice-btn:hover{background:rgba(0,242,255,.22)}
+#voice-btn.recording{background:rgba(255,50,50,.2);border-color:rgba(255,80,80,.6);color:#ff5050;animation:recPulse .8s ease-in-out infinite}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,80,80,.4)}50%{box-shadow:0 0 0 8px rgba(255,80,80,0)}}
+
+/* REC INDICATOR */
+#rec-indicator{display:none;align-items:center;gap:8px;padding:7px 14px;background:rgba(255,30,30,.1);border-top:1px solid rgba(255,60,60,.25);font-size:.68rem;color:#ff8080;flex-shrink:0}
+#rec-indicator.show{display:flex}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#ff5050;animation:recPulse .8s ease-in-out infinite;flex-shrink:0}
+#rec-timer{font-family:'Orbitron',monospace;font-size:.72rem;color:#ff8080;min-width:32px}
+#rec-cancel{margin-left:auto;background:rgba(255,80,80,.2);border:1px solid rgba(255,80,80,.4);color:#ff8080;padding:4px 10px;border-radius:8px;font-size:.62rem;cursor:pointer;font-family:inherit}
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- BOOT -->
+<div id="boot-loader">
+    <video id="boot-video" src="https://files.catbox.moe/k6g1jg.mp4" autoplay muted playsinline loop></video>
+    <div id="boot-overlay-text">
+        <div style="font-family:'Orbitron',sans-serif;letter-spacing:5px;font-weight:900;font-size:1rem;text-shadow:0 0 20px var(--neon);color:var(--neon)">JEAN OFFICIAL</div>
+        <div style="font-size:.5rem;opacity:.6;letter-spacing:4px;color:var(--neon)">PUBLIC GRUP — CONNECTING...</div>
+        <div class="boot-progress"><div class="boot-bar"></div></div>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-overlay">
+    <div class="login-card">
+        <div class="login-avatar"><i class="fas fa-user-astronaut"></i></div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:3px;margin-bottom:2px">PUBLIC GRUP</div>
+        <div style="font-size:.55rem;opacity:.45;letter-spacing:4px;margin-bottom:4px">JEAN OFFICIAL</div>
+        <input type="text" id="nick" placeholder="Masukkan username kak..." maxlength="14">
+        <button class="login-btn" onclick="start()"><i class="fas fa-sign-in-alt" style="margin-right:8px"></i>GABUNG SEKARANG</button>
+    </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- TikTok DL -->
+<div class="modal-overlay" id="dl-overlay">
+    <div class="m-card" style="background:rgba(0,10,20,.98);border:1px solid rgba(0,242,255,.4);box-shadow:0 0 50px rgba(0,242,255,.12)">
+        <div class="m-head"><div class="m-title" style="color:var(--neon)"><i class="fab fa-tiktok" style="margin-right:8px"></i>TIKTOK / DOUYIN DL</div><span class="m-close" onclick="closeM('dl-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" type="text" id="dl-url" placeholder="Paste link TikTok / Douyin..." style="border-color:rgba(0,242,255,.3)"><button class="m-go" onclick="doDownload()" style="background:var(--neon);color:#000">FETCH</button></div>
+        <div class="m-status" id="dl-status" style="color:rgba(0,242,255,.6)"></div>
+        <div id="dl-result" style="display:none;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:none">
+            <img id="dl-thumb" style="display:none;width:100%;border-radius:13px;border:1px solid rgba(0,242,255,.2);max-height:150px;object-fit:cover">
+            <div id="dl-info" style="font-size:.68rem;line-height:1.7;color:rgba(255,255,255,.65)"></div>
+            <div class="dl-btns" id="dl-btns"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SoundCloud -->
+<div class="modal-overlay" id="sc-overlay">
+    <div class="m-card" style="background:rgba(10,4,0,.98);border:1px solid rgba(255,85,0,.45);box-shadow:0 0 50px rgba(255,85,0,.1)">
+        <div class="m-head"><div class="m-title" style="color:#ff5500"><i class="fab fa-soundcloud" style="margin-right:8px"></i>SOUNDCLOUD SEARCH</div><span class="m-close" onclick="closeM('sc-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" type="text" id="sc-input" placeholder="Cari lagu / artist..." style="border-color:rgba(255,85,0,.3)"><button class="m-go" onclick="doSCSearch()" style="background:#ff5500;color:#fff">CARI</button></div>
+        <div class="m-status" id="sc-status" style="color:rgba(255,85,0,.6)"></div>
+        <div class="m-scroll" id="sc-list" style="max-height:52vh"></div>
+    </div>
+</div>
+
+<!-- YouTube DL -->
+<div class="modal-overlay" id="yt-overlay">
+    <div class="m-card" style="background:rgba(15,0,0,.98);border:1px solid rgba(255,0,0,.4);box-shadow:0 0 40px rgba(255,0,0,.08)">
+        <div class="m-head"><div class="m-title" style="color:#ff4040"><i class="fab fa-youtube" style="margin-right:8px"></i>YOUTUBE DOWNLOADER</div><span class="m-close" onclick="closeM('yt-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="yt-url" placeholder="Paste link YouTube..." style="border-color:rgba(255,0,0,.3)"><button class="m-go" onclick="doYT()" style="background:#ff0000;color:#fff">GO</button></div>
+        <div class="m-status" id="yt-status" style="color:rgba(255,64,64,.7)"></div>
+        <div id="yt-result" style="display:none;flex-direction:column;gap:10px">
+            <img id="yt-thumb" style="display:none;width:100%;border-radius:12px">
+            <div id="yt-info" style="font-size:.68rem;color:rgba(255,255,255,.7)"></div>
+            <div class="dl-btns" id="yt-btns"></div>
+        </div>
+    </div>
+</div>
+
+<!-- WA Bug -->
+<div class="modal-overlay" id="wa-overlay">
+    <div class="m-card" style="background:rgba(0,15,5,.98);border:1px solid rgba(0,220,80,.4);box-shadow:0 0 40px rgba(0,220,80,.08)">
+        <div class="m-head"><div class="m-title" style="color:#00dc50"><i class="fab fa-whatsapp" style="margin-right:8px"></i>WHATSAPP BUG'S</div><span class="m-close" onclick="closeM('wa-overlay')"><i class="fas fa-times"></i></span></div>
+        <input class="m-input" id="wa-num" placeholder="Nomor WA target (628xxx...)" style="border-color:rgba(0,220,80,.3)">
+        <select id="wa-type" style="border-color:rgba(0,220,80,.3)"><option value="crash">Crash Message</option><option value="freeze">Freeze App</option><option value="spam">Notification Spam</option></select>
+        <button class="m-btn" onclick="doWABug()" style="background:linear-gradient(135deg,#00aa3c,#00dc50);color:#000">EXECUTE BUG</button>
+        <div class="m-status" id="wa-status" style="color:rgba(0,220,80,.7)"></div>
+        <div class="m-result" id="wa-result" style="color:rgba(0,220,80,.9)"></div>
+    </div>
+</div>
+
+<!-- OpenAI -->
+<div class="modal-overlay" id="ai-overlay">
+    <div class="m-card" style="background:rgba(0,8,18,.98);border:1px solid rgba(0,242,255,.4);box-shadow:0 0 40px rgba(0,242,255,.1);max-height:90vh">
+        <div class="m-head"><div class="m-title" style="color:var(--neon)"><i class="fas fa-brain" style="margin-right:8px"></i>OPENAI CHAT</div><span class="m-close" onclick="closeM('ai-overlay')"><i class="fas fa-times"></i></span></div>
+        <div id="ai-messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-height:50vh;scrollbar-width:none;padding:2px 0"></div>
+        <div class="m-row"><input class="m-input" id="ai-input" placeholder="Tanya sesuatu..." style="border-color:rgba(0,242,255,.3)"><button class="m-go" onclick="doAI()" style="background:var(--neon);color:#000">SEND</button></div>
+        <div class="m-status" id="ai-status" style="color:rgba(0,242,255,.6)"></div>
+    </div>
+</div>
+
+<!-- Cek IP -->
+<div class="modal-overlay" id="ip-overlay">
+    <div class="m-card" style="background:rgba(0,5,15,.98);border:1px solid rgba(0,200,255,.4);box-shadow:0 0 40px rgba(0,200,255,.08)">
+        <div class="m-head"><div class="m-title" style="color:#00c8ff"><i class="fas fa-globe" style="margin-right:8px"></i>CEK IP ADDRESS</div><span class="m-close" onclick="closeM('ip-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="ip-input" placeholder="IP address (kosong = IP kamu)" style="border-color:rgba(0,200,255,.3)"><button class="m-go" onclick="doCekIP()" style="background:#00c8ff;color:#000">CEK</button></div>
+        <div class="m-status" id="ip-status" style="color:rgba(0,200,255,.6)"></div>
+        <div class="m-result" id="ip-result" style="color:rgba(255,255,255,.85)"></div>
+    </div>
+</div>
+
+<!-- Cek NIK -->
+<div class="modal-overlay" id="nik-overlay">
+    <div class="m-card" style="background:rgba(5,0,15,.98);border:1px solid rgba(140,0,255,.4);box-shadow:0 0 40px rgba(140,0,255,.08)">
+        <div class="m-head"><div class="m-title" style="color:#a060ff"><i class="fas fa-id-card" style="margin-right:8px"></i>CEK NIK</div><span class="m-close" onclick="closeM('nik-overlay')"><i class="fas fa-times"></i></span></div>
+        <input class="m-input" id="nik-input" placeholder="Masukkan 16 digit NIK..." maxlength="16" style="border-color:rgba(140,0,255,.3)">
+        <button class="m-btn" onclick="doCekNIK()" style="background:linear-gradient(135deg,#7000ff,#a060ff);color:#fff">CEK NIK</button>
+        <div class="m-status" id="nik-status" style="color:rgba(160,96,255,.7)"></div>
+        <div class="m-result" id="nik-result" style="color:rgba(255,255,255,.85)"></div>
+    </div>
+</div>
+
+<!-- Pinterest -->
+<div class="modal-overlay" id="pin-overlay">
+    <div class="m-card" style="background:rgba(15,0,5,.98);border:1px solid rgba(230,0,35,.4);box-shadow:0 0 40px rgba(230,0,35,.08)">
+        <div class="m-head"><div class="m-title" style="color:#e60023"><i class="fab fa-pinterest" style="margin-right:8px"></i>PINTEREST SEARCH</div><span class="m-close" onclick="closeM('pin-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="pin-input" placeholder="Cari foto di Pinterest..." style="border-color:rgba(230,0,35,.3)"><button class="m-go" onclick="doPinterest()" style="background:#e60023;color:#fff">CARI</button></div>
+        <div class="m-status" id="pin-status" style="color:rgba(230,0,35,.6)"></div>
+        <div class="img-grid" id="pin-results"></div>
+    </div>
+</div>
+
+<!-- Spotify -->
+<div class="modal-overlay" id="spot-overlay">
+    <div class="m-card" style="background:rgba(0,10,5,.98);border:1px solid rgba(30,215,96,.4);box-shadow:0 0 40px rgba(30,215,96,.08)">
+        <div class="m-head"><div class="m-title" style="color:#1ed760"><i class="fab fa-spotify" style="margin-right:8px"></i>SPOTIFY DOWNLOAD</div><span class="m-close" onclick="closeM('spot-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="spot-url" placeholder="Paste link Spotify track..." style="border-color:rgba(30,215,96,.3)"><button class="m-go" onclick="doSpotify()" style="background:#1ed760;color:#000">GET</button></div>
+        <div class="m-status" id="spot-status" style="color:rgba(30,215,96,.6)"></div>
+        <div id="spot-result" style="display:none;flex-direction:column;gap:10px">
+            <img id="spot-thumb" style="display:none;width:100%;border-radius:12px">
+            <div id="spot-info" style="font-size:.68rem;color:rgba(255,255,255,.7)"></div>
+            <div class="dl-btns" id="spot-btns"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Tweet Generator -->
+<div class="modal-overlay" id="tweet-overlay">
+    <div class="m-card" style="background:rgba(0,8,20,.98);border:1px solid rgba(29,161,242,.4);box-shadow:0 0 40px rgba(29,161,242,.08)">
+        <div class="m-head"><div class="m-title" style="color:#1da1f2"><i class="fab fa-twitter" style="margin-right:8px"></i>TWEET GENERATOR</div><span class="m-close" onclick="closeM('tweet-overlay')"><i class="fas fa-times"></i></span></div>
+        <textarea class="m-textarea" id="tweet-topic" placeholder="Topik tweet yang mau dibuat..." style="border-color:rgba(29,161,242,.3)"></textarea>
+        <div class="m-row" style="gap:6px">
+            <select id="tweet-tone" style="flex:1;border-color:rgba(29,161,242,.3)"><option>Casual</option><option>Profesional</option><option>Lucu</option><option>Motivasi</option><option>Sarkastis</option></select>
+            <button class="m-go" onclick="doTweetGen()" style="background:#1da1f2;color:#fff">GENERATE</button>
+        </div>
+        <div class="m-status" id="tweet-status" style="color:rgba(29,161,242,.6)"></div>
+        <div id="tweet-result" style="background:rgba(29,161,242,.06);border:1px solid rgba(29,161,242,.2);border-radius:12px;padding:10px;display:none;font-size:.7rem;color:#fff;user-select:text!important;cursor:text;line-height:1.6"></div>
+    </div>
+</div>
+
+<!-- Music Search -->
+<div class="modal-overlay" id="msearch-overlay">
+    <div class="m-card" style="background:rgba(5,0,15,.98);border:1px solid rgba(160,0,255,.4);box-shadow:0 0 40px rgba(160,0,255,.08)">
+        <div class="m-head"><div class="m-title" style="color:#a000ff"><i class="fas fa-headphones" style="margin-right:8px"></i>MUSIC SEARCH</div><span class="m-close" onclick="closeM('msearch-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="ms-input" placeholder="Cari lagu dari berbagai platform..." style="border-color:rgba(160,0,255,.3)"><button class="m-go" onclick="doMusicSearch()" style="background:#a000ff;color:#fff">CARI</button></div>
+        <div class="m-status" id="ms-status" style="color:rgba(160,0,255,.6)"></div>
+        <div class="m-scroll" id="ms-list" style="max-height:50vh"></div>
+    </div>
+</div>
+
+<!-- NGL Spam -->
+<div class="modal-overlay" id="ngl-overlay">
+    <div class="m-card" style="background:rgba(10,0,15,.98);border:1px solid rgba(200,0,255,.4);box-shadow:0 0 40px rgba(200,0,255,.08)">
+        <div class="m-head"><div class="m-title" style="color:#c800ff"><i class="fas fa-comments" style="margin-right:8px"></i>SPAM NGL</div><span class="m-close" onclick="closeM('ngl-overlay')"><i class="fas fa-times"></i></span></div>
+        <input class="m-input" id="ngl-user" placeholder="Username NGL target..." style="border-color:rgba(200,0,255,.3)">
+        <textarea class="m-textarea" id="ngl-msg" placeholder="Pesan yang akan dikirim..." style="border-color:rgba(200,0,255,.3)"></textarea>
+        <div class="m-row" style="gap:8px;align-items:center">
+            <input class="m-input" id="ngl-count" type="number" placeholder="Jumlah (max 20)" min="1" max="20" value="5" style="border-color:rgba(200,0,255,.3);width:120px;flex:none">
+            <button class="m-btn" onclick="doNGLSpam()" style="background:linear-gradient(135deg,#7000ff,#c800ff);color:#fff;flex:1">SPAM!</button>
+        </div>
+        <div class="m-status" id="ngl-status" style="color:rgba(200,0,255,.7)"></div>
+    </div>
+</div>
+
+<!-- Telegram Spam -->
+<div class="modal-overlay" id="tg-overlay">
+    <div class="m-card" style="background:rgba(0,5,15,.98);border:1px solid rgba(0,136,204,.4);box-shadow:0 0 40px rgba(0,136,204,.08)">
+        <div class="m-head"><div class="m-title" style="color:#0088cc"><i class="fab fa-telegram" style="margin-right:8px"></i>TELEGRAM SPAM</div><span class="m-close" onclick="closeM('tg-overlay')"><i class="fas fa-times"></i></span></div>
+        <input class="m-input" id="tg-target" placeholder="Username / nomor Telegram..." style="border-color:rgba(0,136,204,.3)">
+        <textarea class="m-textarea" id="tg-msg" placeholder="Pesan spam..." style="border-color:rgba(0,136,204,.3)"></textarea>
+        <div class="m-row" style="gap:8px;align-items:center">
+            <input class="m-input" id="tg-count" type="number" placeholder="Jumlah (max 30)" min="1" max="30" value="10" style="border-color:rgba(0,136,204,.3);width:120px;flex:none">
+            <button class="m-btn" onclick="doTGSpam()" style="background:#0088cc;color:#fff;flex:1">KIRIM</button>
+        </div>
+        <div class="m-status" id="tg-status" style="color:rgba(0,136,204,.7)"></div>
+    </div>
+</div>
+
+<!-- iPhone Quoted -->
+<div class="modal-overlay" id="iq-overlay">
+    <div class="m-card" style="background:rgba(8,8,10,.98);border:1px solid rgba(180,180,200,.3)">
+        <div class="m-head"><div class="m-title" style="color:#c0c0d0"><i class="fas fa-mobile-alt" style="margin-right:8px"></i>IPHONE QUOTED</div><span class="m-close" onclick="closeM('iq-overlay')"><i class="fas fa-times"></i></span></div>
+        <input class="m-input" id="iq-name" placeholder="Nama pengirim..." style="border-color:rgba(180,180,200,.25)">
+        <textarea class="m-textarea" id="iq-text" placeholder="Teks pesan yang akan di-quote..." style="border-color:rgba(180,180,200,.25)"></textarea>
+        <button class="m-btn" onclick="doIPhoneQuoted()" style="background:linear-gradient(135deg,#444,#888);color:#fff">GENERATE</button>
+        <div class="m-status" id="iq-status" style="color:rgba(200,200,220,.6)"></div>
+        <div id="iq-result" style="display:none;border-radius:12px;overflow:hidden;font-size:.7rem;color:rgba(255,255,255,.85);user-select:text!important"></div>
+    </div>
+</div>
+
+<!-- ═══ API SETTINGS ═══ -->
+<div class="modal-overlay" id="api-settings-overlay">
+    <div class="m-card" style="background:rgba(0,8,18,.99);border:1px solid rgba(0,242,255,.5);box-shadow:0 0 60px rgba(0,242,255,.15);max-height:90vh;overflow-y:auto">
+        <div class="m-head">
+            <div class="m-title" style="color:var(--neon)"><i class="fas fa-cog" style="margin-right:8px"></i>API SETTINGS</div>
+            <span class="m-close" onclick="closeM('api-settings-overlay')"><i class="fas fa-times"></i></span>
+        </div>
+        <div style="font-size:.6rem;opacity:.45;letter-spacing:1px;margin-top:-6px">Ganti base URL API untuk setiap tool</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <div style="font-size:.62rem;color:rgba(0,242,255,.5);letter-spacing:2px;border-bottom:1px solid rgba(0,242,255,.1);padding-bottom:5px">BASE URL</div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Base URL (semua tool)</div>
+                <input class="m-input" id="api-base" placeholder="Masukkan base URL API..." style="border-color:rgba(0,242,255,.3);margin:0">
+            </div>
+            <div style="font-size:.62rem;color:rgba(0,242,255,.5);letter-spacing:2px;border-bottom:1px solid rgba(0,242,255,.1);padding-bottom:5px;margin-top:4px">OVERRIDE PER TOOL (opsional)</div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">TikTok / Douyin DL</div>
+                <input class="m-input" id="api-tiktok" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(0,242,255,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">YouTube DL</div>
+                <input class="m-input" id="api-yt" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(255,0,0,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">SoundCloud Search</div>
+                <input class="m-input" id="api-sc" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(255,85,0,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">OpenAI Chat</div>
+                <input class="m-input" id="api-ai" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(0,229,255,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Spotify DL</div>
+                <input class="m-input" id="api-spot" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(30,215,96,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Music Search</div>
+                <input class="m-input" id="api-ms" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(160,0,255,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">NGL Spam</div>
+                <input class="m-input" id="api-ngl" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(200,0,255,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Telegram Spam</div>
+                <input class="m-input" id="api-tg" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(0,136,204,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">WA Bug's</div>
+                <input class="m-input" id="api-wa" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(0,220,80,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">iPhone Quoted (canvas/iqc)</div>
+                <input class="m-input" id="api-iq" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(192,192,208,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Get Code</div>
+                <input class="m-input" id="api-gc" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(0,255,136,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Cek NIK</div>
+                <input class="m-input" id="api-nik" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(160,96,255,.2);margin:0">
+            </div>
+            <div>
+                <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">Pinterest Search</div>
+                <input class="m-input" id="api-pin" placeholder="Kosongkan = pakai base URL" style="border-color:rgba(230,0,35,.2);margin:0">
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="m-btn" onclick="saveAPISettings()" style="background:linear-gradient(135deg,var(--purple),var(--neon));color:#fff;flex:1">💾 SIMPAN</button>
+            <button class="m-btn" onclick="resetAPISettings()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);flex:none;width:44px;padding:11px 0" title="Reset default">↺</button>
+        </div>
+        <div class="m-status" id="api-save-st" style="color:#00ffaa;text-align:center"></div>
+    </div>
+</div>
+
+<!-- ═══ GET CODE ═══ -->
+<div class="modal-overlay" id="gc-overlay">
+    <div class="m-card" style="background:rgba(0,10,5,.98);border:1px solid rgba(0,255,136,.4)">
+        <div class="m-head"><div class="m-title" style="color:#00ff88"><i class="fas fa-code" style="margin-right:8px"></i>GET CODE</div><span class="m-close" onclick="closeM('gc-overlay')"><i class="fas fa-times"></i></span></div>
+        <div class="m-row"><input class="m-input" id="gc-input" placeholder="Paste URL / nama tools..." style="border-color:rgba(0,255,136,.3)"><button class="m-go" onclick="doGetCode()" style="background:linear-gradient(135deg,#007a40,#00ff88);color:#000">GET</button></div>
+        <div class="m-status" id="gc-status" style="color:rgba(0,255,136,.6)"></div>
+        <div id="gc-result" style="display:none;background:rgba(0,0,0,.5);border-radius:10px;padding:10px;font-size:.65rem;color:#00ff88;user-select:text!important;cursor:text;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;scrollbar-width:none"></div>
+    </div>
+</div>
+
+<!-- ═══ TOOLS PANEL ═══ -->
+<div id="tools-overlay">
+    <div class="tools-hdr">
+        <div class="tools-hdr-title"><i class="fas fa-th" style="margin-right:10px"></i>TOOLS & UTILITIES</div>
+        <div style="display:flex;gap:8px">
+            <button class="tools-close" onclick="openM('api-settings-overlay')" title="API Settings" style="background:rgba(0,242,255,.12);border-color:rgba(0,242,255,.35);color:var(--neon);font-size:.7rem;width:auto;padding:0 10px;letter-spacing:1px"><i class="fas fa-cog" style="margin-right:5px"></i>API</button>
+            <button class="tools-close" onclick="closeTools()"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    <div class="tools-grid-wrap">
+        <div class="tools-grid">
+            <div class="tool-card" style="--cc:#ff007f" onclick="openM('ngl-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-comments" style="color:#ff007f;text-shadow:0 0 10px #ff007f"></i></div><div class="tool-label">SPAM NGL</div></div>
+            <div class="tool-card" style="--cc:#0088cc" onclick="openM('tg-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-telegram" style="color:#0088cc;text-shadow:0 0 10px #0088cc"></i></div><div class="tool-label">TG SPAM</div></div>
+            <div class="tool-card" style="--cc:#ff0000" onclick="openM('yt-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-youtube" style="color:#ff4040;text-shadow:0 0 10px #ff0000"></i></div><div class="tool-label">YT DL</div></div>
+            <div class="tool-card" style="--cc:#00f2ff" onclick="openM('dl-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-tiktok" style="color:#00f2ff;text-shadow:0 0 10px #00f2ff"></i></div><div class="tool-label">TIKTOK DL</div></div>
+            <div class="tool-card" style="--cc:#00dc50" onclick="openM('wa-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-whatsapp" style="color:#00dc50;text-shadow:0 0 10px #00dc50"></i></div><div class="tool-label">WA BUG'S</div></div>
+            <div class="tool-card" style="--cc:#00e5ff" onclick="openM('ai-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-brain" style="color:#00e5ff;text-shadow:0 0 10px #00e5ff"></i></div><div class="tool-label">OPENAI</div></div>
+            <div class="tool-card" style="--cc:#c0c0d0" onclick="openM('iq-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-mobile-alt" style="color:#c0c0d0;text-shadow:0 0 8px #c0c0d0"></i></div><div class="tool-label">IPHONE QT</div></div>
+            <div class="tool-card" style="--cc:#00ff88" onclick="openM('gc-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-code" style="color:#00ff88;text-shadow:0 0 10px #00ff88"></i></div><div class="tool-label">GET CODE</div></div>
+            <div class="tool-card" style="--cc:#00c8ff" onclick="openM('ip-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-globe" style="color:#00c8ff;text-shadow:0 0 10px #00c8ff"></i></div><div class="tool-label">CEK IP</div></div>
+            <div class="tool-card" style="--cc:#a000ff" onclick="openM('msearch-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-headphones" style="color:#a000ff;text-shadow:0 0 10px #a000ff"></i></div><div class="tool-label">MUSIC SRCH</div></div>
+            <div class="tool-card" style="--cc:#1ed760" onclick="openM('spot-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-spotify" style="color:#1ed760;text-shadow:0 0 10px #1ed760"></i></div><div class="tool-label">SPOTIFY DL</div></div>
+            <div class="tool-card" style="--cc:#a060ff" onclick="openM('nik-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fas fa-id-card" style="color:#a060ff;text-shadow:0 0 10px #a060ff"></i></div><div class="tool-label">CEK NIK</div></div>
+            <div class="tool-card" style="--cc:#e60023" onclick="openM('pin-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-pinterest" style="color:#e60023;text-shadow:0 0 10px #e60023"></i></div><div class="tool-label">PINTEREST</div></div>
+            <div class="tool-card" style="--cc:#1da1f2" onclick="openM('tweet-overlay');closeTools()"><div class="tool-icon-wrap"><i class="fab fa-twitter" style="color:#1da1f2;text-shadow:0 0 10px #1da1f2"></i></div><div class="tool-label">TWEET GEN</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div class="app-ui">
+    <div class="chat-box" id="main-app">
+        <header>
+            <div class="header-row">
+                <div class="header-left">
+                    <div class="hdr-btn hdr-tiktok" onclick="openM('dl-overlay')" title="TikTok DL"><i class="fab fa-tiktok"></i></div>
+                    <div class="hdr-btn hdr-sc" onclick="openM('sc-overlay')" title="SoundCloud"><i class="fab fa-soundcloud"></i></div>
+                    <div class="hdr-btn hdr-tools" onclick="openTools()" title="Tools"><i class="fas fa-th"></i></div>
+                </div>
+                <div class="header-title">PUBLIC GRUP<span>JEAN OFFICIAL</span></div>
+                <div class="online-badge"><div class="online-dot"></div><span id="online-count">0</span>&nbsp;online</div>
+            </div>
+            <div id="typing-status"></div>
+        </header>
+
+        <div id="chat-win"></div>
+        <button id="scroll-btn" onclick="scrollToBottom()"><i class="fas fa-chevron-down"></i></button>
+
+        <!-- SC Mini Player -->
+        <div id="sc-player-bar">
+            <i class="fab fa-soundcloud" style="color:#ff5500;font-size:.9rem;flex-shrink:0"></i>
+            <div id="sc-player-title">—</div>
+            <div class="sc-prog-wrap" id="sc-prog-wrap"><div class="sc-prog-fill" id="sc-prog-fill"></div></div>
+            <button class="sc-pp-btn" id="sc-pp-btn" onclick="toggleSCPlay()"><i class="fas fa-pause"></i></button>
+            <button class="sc-pp-btn" onclick="stopSC()" style="font-size:.7rem;color:rgba(255,85,0,.45)"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Music Bar -->
+        <div class="music-bar">
+            <i class="fas fa-compact-disc fa-spin" style="color:var(--neon);font-size:.9rem"></i>
+            <div id="track-name" style="max-width:120px">Ready</div>
+            <a id="identify-btn" title="Identifikasi lagu ini" target="_blank" rel="noopener" style="display:none;color:#ffdd57;font-size:.75rem;cursor:pointer;text-decoration:none;flex-shrink:0;background:rgba(255,221,87,.12);border:1px solid rgba(255,221,87,.35);border-radius:8px;padding:3px 7px;white-space:nowrap;animation:idpls 1.5s ease-in-out infinite">🔍 Identify</a>
+            <div class="music-progress-wrap" id="music-progress-wrap"><div class="music-progress-bar" id="music-bar-fill"></div></div>
+            <div style="display:flex;gap:12px;font-size:1rem">
+                <i class="fas fa-play" id="play-btn" onclick="togglePlay()" style="cursor:pointer"></i>
+                <i class="fas fa-forward" onclick="nextTrack()" style="cursor:pointer"></i>
+            </div>
+        </div>
+
+        <!-- Reply Preview Bar -->
+        <div id="reply-bar">
+            <span id="reply-bar-icon"><i class="fas fa-reply"></i></span>
+            <div id="reply-bar-text">Balas <span id="reply-bar-name"></span>: <span id="reply-bar-msg"></span></div>
+            <button id="reply-cancel" onclick="cancelReply()" title="Batal balas"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Recording Indicator -->
+        <div id="rec-indicator">
+            <div class="rec-dot"></div>
+            <span>Merekam</span>
+            <span id="rec-timer">0:00</span>
+            <button id="rec-cancel" onclick="cancelRecording()">Batalkan</button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="emoji-picker" id="emoji-picker"></div>
+            <div class="sticker-panel" id="sticker-panel">
+                <div class="sticker-panel-title">PILIH STIKER</div>
+                <div class="stk-categories" id="stk-cats"></div>
+                <div class="stk-grid" id="stk-grid"></div>
+            </div>
+            <div class="input-wrap">
+                <span class="emoji-trigger" id="emoji-trigger" onclick="toggleEmoji()"><i class="far fa-smile"></i></span>
+                <span class="emoji-trigger" id="sticker-trigger" onclick="toggleSticker()" style="font-size:1.1rem">🎭</span>
+                <input type="text" id="m-input" placeholder="Pesan ke PUBLIC GRUP..." autocomplete="off">
+            </div>
+            <button id="voice-btn" onclick="toggleVoice()" title="Pesan Suara"><i class="fas fa-microphone"></i></button>
+            <button id="send-btn" onclick="sendMsgAnim()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<audio id="audio-core"></audio>
+
+<script type="module">
+document.onkeydown=e=>{
+    const blocked=[123];
+    if(blocked.includes(e.keyCode))return false;
+    if(e.ctrlKey&&e.shiftKey&&[73,74,67,75,69].includes(e.keyCode))return false;
+    if(e.ctrlKey&&[85,83,65,80].includes(e.keyCode))return false;
+    if(e.key==='PrintScreen'){document.body.style.opacity='0';setTimeout(()=>document.body.style.opacity='1',300);return false;}
+};
+document.addEventListener('contextmenu',e=>e.preventDefault());
+// Hanya block copy/cut di luar input & textarea (jangan block FileReader)
+document.addEventListener('copy',e=>{if(!e.target.matches('input,textarea,[contenteditable]'))e.preventDefault();});
+document.addEventListener('cut',e=>{if(!e.target.matches('input,textarea,[contenteditable]'))e.preventDefault();});
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>{if(!e.target.matches('input,textarea'))e.preventDefault();});
+let devOpen=false;
+const devCheck=()=>{if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){if(!devOpen){devOpen=true;document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff0000;font-family:monospace;font-size:1rem;letter-spacing:3px;flex-direction:column;gap:16px"><i class="fas fa-ban" style="font-size:3rem"></i><div>⛔ DILARANG INSPECT ⛔</div></div>';}}else{devOpen=false;}};
+setInterval(devCheck,1000);
+
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import{getDatabase,ref,push,onChildAdded,set,onValue,remove,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const FB={apiKey:"AIzaSyAs6L-XoY_t7UjV-L3mK8Z6P7n5vR4W2I",authDomain:"e-chat-online.firebaseapp.com",databaseURL:"https://e-chat-online-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"e-chat-online"};
+const app=initializeApp(FB),db=getDatabase(app);
+let myNick="",replyObj=null,isAtBottom=true;
+
+// ── COLOR ──
+const CP=['#00f2ff','#ff6b9d','#a8ff78','#ffdd57','#ff9f43','#fd79a8','#74b9ff','#55efc4','#fdcb6e','#e17055'];
+function uC(n){let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return CP[Math.abs(h)%CP.length];}
+
+// ── NOTIF ──
+const AX=new(window.AudioContext||window.webkitAudioContext)();
+function playNotif(){try{const o=AX.createOscillator(),g=AX.createGain();o.connect(g);g.connect(AX.destination);o.type='sine';o.frequency.setValueAtTime(880,AX.currentTime);o.frequency.exponentialRampToValueAtTime(440,AX.currentTime+0.15);g.gain.setValueAtTime(0.12,AX.currentTime);g.gain.exponentialRampToValueAtTime(0.001,AX.currentTime+0.3);o.start();o.stop(AX.currentTime+0.3);}catch(e){}}
+
+// ── MUSIC ──
+const PL=[{title:"Aku Ingin Jadi Temanmu",src:"https://files.catbox.moe/sca6c9.mp3"},{title:"Aman Saja",src:"https://files.catbox.moe/571ysb.mp3"},{title:"Hanya Dia",src:"https://files.catbox.moe/957xu0.mp3"},{title:"Di Malam Sepi",src:"https://files.catbox.moe/5d00x0.mp3"},{title:"Denok",src:"https://files.catbox.moe/9wcz1u.mp3"},{title:"Raiso Ngapusi",src:"https://files.catbox.moe/sudgox.mp3"}];
+let tIdx=0;
+const player=document.getElementById('audio-core');
+player.ontimeupdate=()=>{if(player.duration)document.getElementById('music-bar-fill').style.width=(player.currentTime/player.duration*100)+'%';};
+player.onended=()=>nextTrack();
+document.getElementById('music-progress-wrap').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();if(player.duration)player.currentTime=((e.clientX-r.left)/r.width)*player.duration;};
+window.togglePlay=()=>{if(player.paused){player.play();document.getElementById('play-btn').className="fas fa-pause";}else{player.pause();document.getElementById('play-btn').className="fas fa-play";}};
+window.nextTrack=()=>{tIdx=(tIdx+1)%PL.length;loadTrack();};
+function loadTrack(){
+    const track=PL[tIdx];
+    player.src=track.src;
+    document.getElementById('track-name').innerText=track.title;
+    player.play().catch(()=>{});
+    document.getElementById('play-btn').className="fas fa-pause";
+    // Show identify button for unknown songs
+    const iBtn=document.getElementById('identify-btn');
+    if(track.title.startsWith('🔍')){
+        // Link to AHA Music with the audio URL for identification
+        iBtn.href=`https://www.google.com/search?q=identify+song+shazam&tbm=isch`;
+        // Actually use audd.io which accepts URL
+        iBtn.href=`https://audd.io/?url=${encodeURIComponent(track.src)}`;
+        iBtn.style.display='inline-flex';
+        iBtn.style.alignItems='center';
+        iBtn.title=`Klik untuk identifikasi: ${track.src}`;
+    } else {
+        iBtn.style.display='none';
+    }
+}
+
+// ── EMOJI PICKER ──
+const ES={'SERING':['😀','😂','🥹','😍','🥰','😎','🤩','😜','🤔','😮','😢','😡','🥺','😴','🤗'],'HATI':['❤️','🧡','💛','💚','💙','💜','🖤','🤍','💯','🔥','✨','⭐','🌙','🌊','🌸'],'GESTUR':['👍','👎','👋','🙏','💪','🤙','👀','🫶','🫡','🤜','🤛','✌️','🤞','👏','🙌'],'OBJEK':['🎵','🎮','💻','📱','🎯','🏆','💡','🚀','👑','💎','🍕','🎂','☕','🌟','🎁']};
+const ep=document.getElementById('emoji-picker');
+Object.entries(ES).forEach(([cat,emojis])=>{const c=document.createElement('div');c.className='emoji-category';c.textContent=cat;ep.appendChild(c);emojis.forEach(em=>{const b=document.createElement('span');b.className='emoji-btn';b.textContent=em;b.onclick=()=>{document.getElementById('m-input').value+=em;document.getElementById('m-input').focus();};ep.appendChild(b);});});
+window.toggleEmoji=()=>{ep.classList.toggle('show');document.getElementById('sticker-panel').classList.remove('show');};
+
+// ── STICKER PANEL ──
+const STICKERS={
+    'Wajah':['😀','😁','😆','🤣','😅','😂','🥹','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜'],
+    'Gestur':['👍','👎','👋','🤚','✋','🖖','🤙','💪','🦾','🙏','🤝','🫶','✌️','🤞','🤟','🤘','🤜','🤛','👊','✊','🫵','👆','👇','👈','👉'],
+    'Hati':['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','💕','💞','💓','💗','💖','💘','💝','💟','♥️','🫀','💌','💋','🫦'],
+    'Hewan':['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🦆','🦅','🦉','🦋'],
+    'Makanan':['🍕','🍔','🍟','🌮','🌯','🥙','🍱','🍣','🍜','🍝','🍛','🍲','🥘','🫕','🍥','🥮','🍡','🧁','🎂','🍰','🍩','🍪','🍦','🍧','🍨'],
+    'Aktivitas':['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','🥊','🥋','🥅','⛳','🏹','🎣','🤿','🎽','🛹','🛷','🏂','⛷️','🤸','🤺','🏋️']
+};
+let activeStkCat='Wajah';
+const stkCats=document.getElementById('stk-cats'),stkGrid=document.getElementById('stk-grid');
+Object.keys(STICKERS).forEach(cat=>{const b=document.createElement('button');b.className='stk-cat-btn'+(cat===activeStkCat?' active':'');b.textContent=cat;b.onclick=()=>{activeStkCat=cat;document.querySelectorAll('.stk-cat-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderStkGrid();};stkCats.appendChild(b);});
+function renderStkGrid(){stkGrid.innerHTML='';STICKERS[activeStkCat].forEach(stk=>{const s=document.createElement('span');s.className='stk-item';s.textContent=stk;s.onclick=()=>{sendSticker(stk);document.getElementById('sticker-panel').classList.remove('show');};stkGrid.appendChild(s);});}
+renderStkGrid();
+window.toggleSticker=()=>{document.getElementById('sticker-panel').classList.toggle('show');ep.classList.remove('show');};
+
+// ── SCROLL ──
+const cw=document.getElementById('chat-win');
+window.scrollToBottom=()=>cw.scrollTop=cw.scrollHeight;
+cw.onscroll=()=>{const d=cw.scrollHeight-cw.scrollTop-cw.clientHeight;isAtBottom=d<60;document.getElementById('scroll-btn').classList.toggle('show',d>150);};
+
+// ── BOOT ──
+// Boot: tunggu video selesai 1 loop atau max 5 detik, lalu fade out
+const bootVid=document.getElementById('boot-video');
+const bootLoader=document.getElementById('boot-loader');
+function hideBoot(){
+    bootLoader.style.opacity='0';
+    bootLoader.style.transform='scale(1.05)';
+    setTimeout(()=>{
+        bootLoader.style.display='none';
+        if(!myNick)document.getElementById('login-overlay').style.display='flex';
+        else document.getElementById('login-overlay').style.display='flex';
+    },1000);
+}
+bootVid.addEventListener('ended',hideBoot,{once:true});
+// Fallback: max 5 detik
+setTimeout(()=>{if(bootLoader.style.display!=='none')hideBoot();},5000);
+window.start=()=>{const v=document.getElementById('nick').value.trim();if(v){myNick=v;document.getElementById('login-overlay').style.display='none';initChat();}};
+document.getElementById('nick').addEventListener('keypress',e=>{if(e.key==='Enter')window.start();});
+
+// ── SEND ── (global declaration agar tidak undefined saat dipanggil sebelum initChat)
+let sendMsg = () => {
+    const input = document.getElementById('m-input');
+    const txt = input?.value?.trim();
+    if (!txt) return;
+    push(ref(db,'apex_messages'),{user:myNick,type:'text',text:txt,reply:replyObj||null,time:serverTimestamp(),reactions:{}});
+    input.value='';
+    replyObj=null;
+    try{cancelReply();}catch(e){}
+    document.getElementById('emoji-picker')?.classList.remove('show');
+    document.getElementById('sticker-panel')?.classList.remove('show');
+};
+
+// ── SEND ANIM ──
+window.sendMsgAnim=()=>{const b=document.getElementById('send-btn');b.classList.remove('sending');void b.offsetWidth;b.classList.add('sending');sendMsg();};
+
+
+function sendSticker(stk){push(ref(db,'apex_messages'),{user:myNick,type:'sticker',sticker:stk,reply:replyObj||null,time:serverTimestamp(),reactions:{}});if(typeof cancelReply==='function')cancelReply();else replyObj=null;}
+
+// ── VOICE SYSTEM ──
+let mediaRecorder=null,audioChunks=[],recInterval=null,recSecs=0,isRecording=false;
+
+function canUseMic(){
+    return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder&&
+        (location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'));
+}
+
+function getSupportedMime(){
+    const types=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4'];
+    for(const t of types){try{if(MediaRecorder.isTypeSupported(t))return t;}catch(e){}}
+    return '';
+}
+
+function showVoiceToast(msg,color='#ff5555'){
+    let t=document.getElementById('_vtoast');
+    if(!t){
+        t=document.createElement('div');t.id='_vtoast';
+        t.style.cssText='position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.93);border:1px solid;padding:10px 18px;border-radius:14px;font-size:.72rem;z-index:9999;text-align:center;max-width:290px;line-height:1.5;backdrop-filter:blur(12px);transition:opacity .3s;pointer-events:none';
+        document.body.appendChild(t);
+    }
+    t.style.borderColor=color;t.style.color=color;t.textContent=msg;t.style.opacity='1';t.style.display='block';
+    clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.style.display='none',300);},3500);
+}
+
+function generateWaveBars(){return Array.from({length:24},()=>Math.floor(Math.random()*18)+4);}
+
+function resetRecUI(){
+    document.getElementById('voice-btn').classList.remove('recording');
+    document.getElementById('voice-btn').innerHTML='<i class="fas fa-microphone"></i>';
+    document.getElementById('rec-indicator').classList.remove('show');
+    recSecs=0;
+}
+
+function stopRecording(){
+    if(mediaRecorder&&mediaRecorder.state!=='inactive'){mediaRecorder.stop();isRecording=false;clearInterval(recInterval);}
+}
+
+window.cancelRecording=()=>{
+    audioChunks=[];
+    if(mediaRecorder&&mediaRecorder.state!=='inactive'){
+        mediaRecorder.onstop=()=>{try{mediaRecorder.stream?.getTracks().forEach(t=>t.stop());}catch(e){}resetRecUI();};
+        mediaRecorder.stop();
+    }else resetRecUI();
+    isRecording=false;clearInterval(recInterval);
+};
+
+async function sendVoiceMsg(blob,mime='audio/webm'){
+    const reader=new FileReader();
+    reader.onloadend=()=>{
+        const b64=reader.result,dur=recSecs,bars=generateWaveBars();
+        push(ref(db,'apex_messages'),{user:myNick,type:'voice',voiceData:b64,voiceDur:dur,voiceBars:bars,voiceMime:mime,reply:replyObj||null,time:serverTimestamp(),reactions:{}});
+        if(typeof cancelReply==='function')cancelReply();else replyObj=null;
+    };
+    reader.readAsDataURL(blob);
+}
+
+// Mode file picker — untuk file:// / non-HTTPS
+function openAudioFilePicker(){
+    let inp=document.getElementById('_audio_inp');
+    if(!inp){
+        inp=document.createElement('input');inp.type='file';inp.id='_audio_inp';
+        inp.accept='audio/*,.mp3,.ogg,.wav,.m4a,.aac,.opus,.webm,.amr';
+        inp.style.display='none';document.body.appendChild(inp);
+        inp.addEventListener('change',()=>{
+            const file=inp.files[0];if(!file)return;
+            if(file.size>5*1024*1024){showVoiceToast('❌ File max 5MB','#ff5555');inp.value='';return;}
+            showVoiceToast('📤 Mengirim...','#00f2ff');
+            const reader=new FileReader();
+            reader.onloadend=()=>{
+                const estDur=Math.round(file.size/16000)||1,bars=generateWaveBars();
+                push(ref(db,'apex_messages'),{user:myNick,type:'voice',voiceData:reader.result,voiceDur:estDur,voiceBars:bars,voiceMime:file.type||'audio/mpeg',reply:replyObj||null,time:serverTimestamp(),reactions:{}});
+                if(typeof cancelReply==='function')cancelReply();else replyObj=null;
+                showVoiceToast('✅ Audio terkirim!','#00ff88');
+            };
+            reader.onerror=()=>showVoiceToast('❌ Gagal baca file','#ff5555');
+            reader.readAsDataURL(file);inp.value='';
+        });
+    }
+    inp.click();
+}
+
+// Mode mic recorder — untuk HTTPS/localhost
+async function startMicRecording(){
+    try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+        const mime=getSupportedMime();
+        mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+        audioChunks=[];
+        mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)audioChunks.push(e.data);};
+        mediaRecorder.onstop=()=>{
+            stream.getTracks().forEach(t=>t.stop());
+            if(audioChunks.length>0&&recSecs>=1)sendVoiceMsg(new Blob(audioChunks,{type:mime||'audio/webm'}),mime||'audio/webm');
+            resetRecUI();
+        };
+        mediaRecorder.onerror=()=>{showVoiceToast('❌ Error rekaman','#ff5555');resetRecUI();};
+        mediaRecorder.start(100);
+        isRecording=true;recSecs=0;
+        document.getElementById('voice-btn').classList.add('recording');
+        document.getElementById('voice-btn').innerHTML='<i class="fas fa-stop"></i>';
+        document.getElementById('rec-indicator').classList.add('show');
+        document.getElementById('rec-timer').textContent='0:00';
+        recInterval=setInterval(()=>{
+            recSecs++;
+            const m=Math.floor(recSecs/60),s=recSecs%60;
+            document.getElementById('rec-timer').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+            if(recSecs>=120)stopRecording();
+        },1000);
+    }catch(err){
+        let msg='❌ Mikrofon tidak bisa diakses';
+        if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError')msg='❌ Izin mic ditolak';
+        else if(err.name==='NotFoundError')msg='❌ Mic tidak ditemukan';
+        else if(err.name==='NotReadableError')msg='❌ Mic dipakai app lain';
+        showVoiceToast(msg,'#ff5555');
+        // Fallback otomatis ke file picker
+        setTimeout(()=>openAudioFilePicker(),500);
+    }
+}
+
+window.toggleVoice=async()=>{
+    if(isRecording){stopRecording();return;}
+    if(canUseMic()){
+        await startMicRecording();
+    }else{
+        // File lokal / non-HTTPS → langsung buka file picker audio
+        openAudioFilePicker();
+    }
+};
+
+// ── INIT CHAT ──
+function initChat(){
+    document.getElementById('main-app').style.display='flex';
+    const input=document.getElementById('m-input');
+    const myPR=ref(db,'apex_presence/'+myNick);
+    set(myPR,{online:true,ts:serverTimestamp()});
+    window.addEventListener('beforeunload',()=>remove(myPR));
+
+    onValue(ref(db,'apex_presence'),s=>{
+        const d=s.val()||{},users=Object.keys(d),typing=users.filter(u=>u!==myNick&&d[u]?.typing);
+        document.getElementById('online-count').textContent=users.length;
+        let typingText='';
+        if(typing.length===1)typingText=`<i class="fas fa-pencil-alt" style="font-size:.5rem;margin-right:3px"></i>${typing[0]} sedang mengetik<span class="tdots"><span>.</span><span>.</span><span>.</span></span>`;
+        else if(typing.length===2)typingText=`<i class="fas fa-pencil-alt" style="font-size:.5rem;margin-right:3px"></i>${typing[0]} & ${typing[1]} sedang mengetik<span class="tdots"><span>.</span><span>.</span><span>.</span></span>`;
+        else if(typing.length>=3)typingText=`<i class="fas fa-pencil-alt" style="font-size:.5rem;margin-right:3px"></i>${typing.slice(0,-1).join(', ')} & ${typing[typing.length-1]} sedang mengetik<span class="tdots"><span>.</span><span>.</span><span>.</span></span>`;
+        document.getElementById('typing-status').innerHTML=typingText;
+    });
+
+    input.oninput=()=>{set(ref(db,'apex_presence/'+myNick),{online:true,typing:true});clearTimeout(window.typeT);window.typeT=setTimeout(()=>set(ref(db,'apex_presence/'+myNick),{online:true,typing:false}),2000);};
+
+    // ── REPLY SYSTEM ──
+    window.setReply=(user, text)=>{
+        replyObj={user, text};
+        document.getElementById('reply-bar-name').textContent = '@'+user;
+        document.getElementById('reply-bar-msg').textContent = text.length>45 ? text.substring(0,45)+'...' : text;
+        document.getElementById('reply-bar').classList.add('show');
+        input.focus();
+    };
+    window.cancelReply=()=>{
+        replyObj=null;
+        document.getElementById('reply-bar').classList.remove('show');
+        input.placeholder='Pesan ke PUBLIC GRUP...';
+    };
+
+    window.sendMsg=()=>{
+        const txt=input.value.trim();
+        if(!txt)return;
+        push(ref(db,'apex_messages'),{user:myNick,type:'text',text:txt,reply:replyObj||null,time:serverTimestamp(),reactions:{}});
+        input.value='';cancelReply();
+        ep.classList.remove('show');document.getElementById('sticker-panel').classList.remove('show');
+    };
+    // sync global sendMsg
+    sendMsg = window.sendMsg;
+    input.onkeypress=e=>{if(e.key==='Enter')sendMsgAnim();};
+
+    onChildAdded(ref(db,'apex_messages'),snap=>{
+        const data=snap.val(),msgId=snap.key,isMe=data.user===myNick;
+        const bubble=document.createElement('div');
+        bubble.className=`msg ${isMe?'me':'ot'}`;
+        bubble.dataset.id=msgId;
+        const uc=uC(data.user||'');
+        const ts=data.time?new Date(data.time).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'';
+        const rH=data.reply?`<div class="reply-node">↩ <b style="color:${uC(data.reply.user)}">${data.reply.user}</b>: ${xH(data.reply.text||data.reply.sticker||'')}</div>`:'';
+
+        let contentHTML='';
+        const msgType=data.type||'text';
+        if(msgType==='sticker'){
+            contentHTML=`<span class="msg-sticker">${data.sticker}</span>`;
+            bubble.style.background='transparent';
+            bubble.style.border='none';
+            bubble.style.boxShadow='none';
+            bubble.style.padding='4px 8px';
+        }else{
+            contentHTML=`<span>${xH(data.text||'')}</span>`;
+        }
+
+        bubble.innerHTML=`
+            ${!isMe?`<span class="sender-label" style="color:${uc}">${data.user}</span>`:''}
+            ${rH}${contentHTML}
+            <span class="msg-time">${ts}</span>
+            <div class="reactions-bar" id="reactions-${msgId}"></div>
+            <div class="reaction-popup" id="rpop-${msgId}">
+                <div class="rp-tabs">
+                    <div class="rp-tab active" onclick="switchRPTab('${msgId}','emoji',this)">😊 Emoji</div>
+                    <div class="rp-tab" onclick="switchRPTab('${msgId}','sticker',this)">🎭 Stiker</div>
+                </div>
+                <div id="rpemoji-${msgId}" class="rp-emoji-row">
+                    ${'👍❤️😂😮😢😡🔥🥰'.split('').map((e,i)=>i<8?`<span class="react-opt" data-emoji="${e}" data-msgid="${msgId}">${e}</span>`:'').join('')}
+                </div>
+                <div id="rpstk-${msgId}" class="rp-sticker-grid" style="display:none">
+                    ${'😂🥹😍🔥❤️💯🙏✨👑🎉😭💀👀🤡🫶'.split('').map(s=>`<span class="stk-opt" data-emoji="${s}" data-msgid="${msgId}" data-isstk="1">${s}</span>`).join('')}
+                </div>
+            </div>`;
+
+        if(msgType!=='sticker'){
+            let pT;
+            bubble.addEventListener('touchstart',()=>{pT=setTimeout(()=>showRP(msgId),500);},{passive:true});
+            bubble.addEventListener('touchend',()=>clearTimeout(pT));
+            bubble.ondblclick=()=>showRP(msgId);
+        }
+        bubble.onclick=e=>{
+            if(e.target.closest('.reaction-popup')||
+               e.target.closest('.reactions-bar')||
+               e.target.closest('.rp-tab')||
+               e.target.closest('.react-opt')||
+               e.target.closest('.stk-opt'))return;
+            if(msgType==='sticker')return;
+            const replyText=data.sticker||data.text||'';
+            setReply(data.user, replyText);
+        };
+
+        cw.appendChild(bubble);
+        if(isAtBottom)scrollToBottom();
+        if(!isMe)playNotif();
+        onValue(ref(db,'apex_messages/'+msgId+'/reactions'),rs=>renderRx(msgId,rs.val()||{}));
+    });
+
+    document.addEventListener('click',e=>{
+        if(e.target.classList.contains('react-opt')){
+            toggleRx(e.target.dataset.msgid,e.target.dataset.emoji,false);
+            document.getElementById('rpop-'+e.target.dataset.msgid)?.classList.remove('show');
+        }
+        if(e.target.classList.contains('stk-opt')){
+            toggleRx(e.target.dataset.msgid,e.target.dataset.emoji,true);
+            document.getElementById('rpop-'+e.target.dataset.msgid)?.classList.remove('show');
+        }
+        if(!e.target.closest('.reaction-popup')&&!e.target.closest('.msg'))document.querySelectorAll('.reaction-popup.show').forEach(p=>p.classList.remove('show'));
+    });
+}
+
+window.switchRPTab=(msgId,tab,btn)=>{
+    const ep2=document.getElementById('rpemoji-'+msgId),sp2=document.getElementById('rpstk-'+msgId);
+    document.querySelectorAll(`#rpop-${msgId} .rp-tab`).forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    ep2.style.display=tab==='emoji'?'flex':'none';
+    sp2.style.display=tab==='sticker'?'grid':'none';
+};
+
+function showRP(id){document.querySelectorAll('.reaction-popup.show').forEach(p=>p.classList.remove('show'));document.getElementById('rpop-'+id)?.classList.add('show');}
+
+function toggleRx(msgId,emoji,isSticker=false){
+    const key=isSticker?('stk_'+emoji):emoji;
+    const r=ref(db,`apex_messages/${msgId}/reactions/${encodeURIComponent(key)}/${myNick}`);
+    onValue(r,s=>{if(s.exists())remove(r);else set(r,isSticker?'sticker':'emoji');},{onlyOnce:true});
+}
+
+function renderRx(msgId,rx){
+    const bar=document.getElementById('reactions-'+msgId);if(!bar)return;
+    bar.innerHTML='';
+    Object.entries(rx).forEach(([key,us])=>{
+        const cnt=Object.keys(us).length;if(!cnt)return;
+        const emoji=decodeURIComponent(key).replace('stk_','');
+        const isStk=key.startsWith('stk_');
+        const ch=document.createElement('span');
+        ch.className='react-chip'+(us[myNick]?' mine':'');
+        ch.innerHTML=`${emoji} <span style="font-size:.58rem;opacity:.8">${cnt}</span>`;
+        ch.title=isStk?'Stiker':'Emoji reaksi';
+        ch.onclick=e=>{e.stopPropagation();toggleRx(msgId,emoji,isStk);};
+        bar.appendChild(ch);
+    });
+}
+
+
+// ── SC PLAYER ──
+const scAudio=new Audio();
+window.playSCTrack=(url,title,artist)=>{if(!url)return;player.pause();document.getElementById('play-btn').className='fas fa-play';scAudio.src=url;scAudio.play().catch(()=>{});document.getElementById('sc-player-bar').classList.add('show');document.getElementById('sc-player-title').textContent=`${title} — ${artist}`;document.getElementById('sc-pp-btn').innerHTML='<i class="fas fa-pause"></i>';};
+window.toggleSCPlay=()=>{if(scAudio.paused){scAudio.play().catch(()=>{});document.getElementById('sc-pp-btn').innerHTML='<i class="fas fa-pause"></i>';}else{scAudio.pause();document.getElementById('sc-pp-btn').innerHTML='<i class="fas fa-play"></i>';}};
+window.stopSC=()=>{scAudio.pause();scAudio.src='';document.getElementById('sc-player-bar').classList.remove('show');};
+scAudio.ontimeupdate=()=>{if(scAudio.duration)document.getElementById('sc-prog-fill').style.width=(scAudio.currentTime/scAudio.duration*100)+'%';};
+document.getElementById('sc-prog-wrap').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();if(scAudio.duration)scAudio.currentTime=((e.clientX-r.left)/r.width)*scAudio.duration;};
+
+// ── MODAL HELPERS ──
+window.openM=id=>{document.getElementById(id).classList.add('show');};
+window.closeM=id=>{document.getElementById(id).classList.remove('show');};
+window.openTools=()=>document.getElementById('tools-overlay').classList.add('show');
+window.closeTools=()=>document.getElementById('tools-overlay').classList.remove('show');
+document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('show');}));
+document.addEventListener('click',e=>{
+    if(!e.target.closest('#emoji-picker')&&!e.target.closest('#emoji-trigger'))ep.classList.remove('show');
+    if(!e.target.closest('#sticker-panel')&&!e.target.closest('#sticker-trigger'))document.getElementById('sticker-panel').classList.remove('show');
+});
+
+const sp=(c='currentColor')=>`<span class="sp" style="border-top-color:${c}"></span>`;
+function xH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDur(ms){const s=Math.floor(ms/1000);return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}
+
+// ── API SETTINGS ──
+// API default (obfuscated)
+function _d(e,k){const b=atob(e);let o='';for(let i=0;i<b.length;i++)o+=String.fromCharCode(b.charCodeAt(i)^k.charCodeAt(i%k.length));return o;}
+const API_DEFAULT=_d('AhEVHhxcSUYCGQhCSkRXGx0AA0AGAkkfUg==','jeanofficial2025');
+let API = {};
+
+function loadAPISettings(){
+    try{
+        const saved = localStorage.getItem('jg_api_cfg');
+        API = saved ? JSON.parse(saved) : {};
+    }catch(e){ API={}; }
+    // Fill inputs
+    document.getElementById('api-base').value = API.base||'';
+    document.getElementById('api-tiktok').value = API.tiktok||'';
+    document.getElementById('api-yt').value = API.yt||'';
+    document.getElementById('api-sc').value = API.sc||'';
+    document.getElementById('api-ai').value = API.ai||'';
+    document.getElementById('api-spot').value = API.spot||'';
+    document.getElementById('api-ms').value = API.ms||'';
+    document.getElementById('api-ngl').value = API.ngl||'';
+    document.getElementById('api-tg').value = API.tg||'';
+    document.getElementById('api-wa').value = API.wa||'';
+    document.getElementById('api-iq').value = API.iq||'';
+    document.getElementById('api-gc').value = API.gc||'';
+    document.getElementById('api-nik').value = API.nik||'';
+    document.getElementById('api-pin').value = API.pin||'';
+}
+
+window.saveAPISettings=()=>{
+    API = {
+        base: document.getElementById('api-base').value.trim().replace(/\/$/,'') || '',
+        tiktok: document.getElementById('api-tiktok').value.trim().replace(/\/$/,''),
+        yt: document.getElementById('api-yt').value.trim().replace(/\/$/,''),
+        sc: document.getElementById('api-sc').value.trim().replace(/\/$/,''),
+        ai: document.getElementById('api-ai').value.trim().replace(/\/$/,''),
+        spot: document.getElementById('api-spot').value.trim().replace(/\/$/,''),
+        ms: document.getElementById('api-ms').value.trim().replace(/\/$/,''),
+        ngl: document.getElementById('api-ngl').value.trim().replace(/\/$/,''),
+        tg: document.getElementById('api-tg').value.trim().replace(/\/$/,''),
+        wa: document.getElementById('api-wa').value.trim().replace(/\/$/,''),
+        iq: document.getElementById('api-iq').value.trim().replace(/\/$/,''),
+        gc: document.getElementById('api-gc').value.trim().replace(/\/$/,''),
+        nik: document.getElementById('api-nik').value.trim().replace(/\/$/,''),
+        pin: document.getElementById('api-pin').value.trim().replace(/\/$/,''),
+    };
+    localStorage.setItem('jg_api_cfg', JSON.stringify(API));
+    const st=document.getElementById('api-save-st');
+    st.textContent='✅ Tersimpan!';
+    setTimeout(()=>{st.textContent='';closeM('api-settings-overlay');},1200);
+};
+
+window.resetAPISettings=()=>{
+    API={};
+    localStorage.removeItem('jg_api_cfg');
+    loadAPISettings();
+    const st=document.getElementById('api-save-st');
+    st.textContent='↺ Reset ke default';
+    setTimeout(()=>st.textContent='',1500);
+};
+
+// Helper: resolve API URL per tool
+function apiURL(tool, path){
+    const base = (API.base||API_DEFAULT);
+    const override = API[tool];
+    return override ? `${override}${path}` : `${base}${path}`;
+}
+
+loadAPISettings();
+
+// ── COPY PROTECTION untuk hasil AI & Get Code ──
+// Block copy/select on result elements (orang lain tidak bisa copy dari AI/GetCode)
+function protectEl(el){
+    if(!el)return;
+    el.addEventListener('copy',e=>{e.preventDefault();e.stopPropagation();});
+    el.addEventListener('cut',e=>{e.preventDefault();e.stopPropagation();});
+    el.addEventListener('selectstart',e=>{e.preventDefault();});
+    el.style.userSelect='none';
+    el.style.webkitUserSelect='none';
+}
+// Apply after DOM ready
+['gc-result','ai-messages','tweet-result'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)protectEl(el);
+});
+// Also protect dynamically added AI messages
+const aiMsgsObs=new MutationObserver(muts=>{
+    muts.forEach(m=>m.addedNodes.forEach(n=>{
+        if(n.nodeType===1){n.style.userSelect='none';n.style.webkitUserSelect='none';n.addEventListener('copy',e=>{e.preventDefault();e.stopPropagation();});}
+    }));
+});
+const aiMsgsEl=document.getElementById('ai-messages');
+if(aiMsgsEl)aiMsgsObs.observe(aiMsgsEl,{childList:true});
+
+window.doDownload=async()=>{
+    const url=document.getElementById('dl-url').value.trim(),st=document.getElementById('dl-status'),res=document.getElementById('dl-result');
+    if(!url){st.innerHTML='⚠️ Masukkan link dulu!';return;}
+    st.innerHTML=sp()+' Fetching...';res.style.display='none';
+    try{
+        const r=await fetch(apiURL('tiktok',`/download/douyin?url=${encodeURIComponent(url)}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'URL tidak valid'}`;return;}
+        st.innerHTML='✅ Berhasil!';res.style.display='flex';
+        const thumb=d.thumbnail||d.cover||d.data?.thumbnail||'',ti=document.getElementById('dl-thumb');
+        if(thumb){ti.src=thumb;ti.style.display='block';}else ti.style.display='none';
+        document.getElementById('dl-info').innerHTML=`<b style="color:var(--neon)">Judul:</b> ${xH((d.title||d.data?.title||d.desc||'Video').substring(0,55))}<br><b style="color:var(--neon)">Author:</b> ${xH(d.author||d.data?.author||'-')}`;
+        const btns=document.getElementById('dl-btns');btns.innerHTML='';
+        const vids=[];
+        if(d.video_nowm||d.data?.video_nowm)vids.push({label:'VIDEO No Watermark',url:d.video_nowm||d.data.video_nowm,cls:'green'});
+        if(d.video||d.data?.video)vids.push({label:'VIDEO Watermark',url:d.video||d.data.video,cls:''});
+        if(d.music||d.data?.music||d.audio)vids.push({label:'AUDIO / MUSIK',url:d.music||d.data?.music||d.audio,cls:''});
+        if(d.urls&&Array.isArray(d.urls))d.urls.forEach((u,i)=>vids.push({label:`VIDEO ${i+1}`,url:typeof u==='string'?u:u.url||u.src,cls:i===0?'green':''}));
+        if(!vids.length)btns.innerHTML=`<div style="font-size:.62rem;color:rgba(0,242,255,.5)">${JSON.stringify(d).substring(0,200)}</div>`;
+        else vids.forEach(v=>{if(!v.url)return;const a=document.createElement('a');a.className=`dl-btn ${v.cls}`;a.href=v.url;a.target='_blank';a.rel='noopener';a.innerHTML=`<i class="fas fa-download"></i>${v.label}`;btns.appendChild(a);});
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('dl-url').addEventListener('keypress',e=>{if(e.key==='Enter')doDownload();});
+
+window.doSCSearch=async()=>{
+    const q=document.getElementById('sc-input').value.trim(),st=document.getElementById('sc-status'),list=document.getElementById('sc-list');
+    if(!q){st.textContent='⚠️ Ketik nama lagu/artist!';return;}
+    st.innerHTML=sp('#ff5500')+' Mencari...';list.innerHTML='';
+    try{
+        const r=await fetch(apiURL('sc',`/search/soundcloud?q=${encodeURIComponent(q)}`));
+        const d=await r.json();
+        let tracks=d.data||d.results||d.tracks||[];if(!Array.isArray(tracks))tracks=Object.values(tracks);
+        tracks=tracks.filter(t=>t&&(t.title||t.name));
+        if(!tracks.length){st.textContent='🔍 Tidak ada hasil.';return;}
+        st.textContent=`✅ ${tracks.length} lagu`;
+        tracks.slice(0,15).forEach(t=>{
+            const title=t.title||t.name||'Unknown',artist=t.user?.username||t.artist||'-',art=t.artwork_url||t.thumbnail||t.cover||'',dur=t.duration?fmtDur(t.duration):'',sUrl=t.stream_url||t.audio||t.url||'',dlUrl=t.download_url||sUrl;
+            const el=document.createElement('div');el.className='sc-track';
+            el.innerHTML=`${art?`<img class="sc-art" src="${art}" onerror="this.style.display='none'">`:'<div class="sc-art"></div>'}<div class="sc-meta"><div class="sc-track-title">${xH(title)}</div><div class="sc-track-artist">${xH(artist)}</div>${dur?`<div class="sc-track-dur">⏱ ${dur}</div>`:''}</div><div class="sc-actions"><button class="sc-play-btn"><i class="fas fa-play"></i></button>${dlUrl?`<a class="sc-dl-lnk" href="${dlUrl}" target="_blank"><i class="fas fa-download"></i></a>`:''}</div>`;
+            el.querySelector('.sc-play-btn').onclick=e=>{e.stopPropagation();window.playSCTrack(sUrl||dlUrl,title,artist);};
+            list.appendChild(el);
+        });
+    }catch(e){st.textContent=`❌ Error: ${e.message}`;}
+};
+document.getElementById('sc-input').addEventListener('keypress',e=>{if(e.key==='Enter')doSCSearch();});
+
+window.doYT=async()=>{
+    const url=document.getElementById('yt-url').value.trim(),st=document.getElementById('yt-status'),res=document.getElementById('yt-result');
+    if(!url){st.innerHTML='⚠️ Masukkan link YouTube!';return;}
+    st.innerHTML=sp('#ff4040')+' Fetching...';res.style.display='none';
+    try{
+        const r=await fetch(apiURL('yt',`/download/youtube?url=${encodeURIComponent(url)}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Gagal'}`;return;}
+        st.innerHTML='✅ Berhasil!';res.style.display='flex';
+        const thumb=d.thumbnail||d.data?.thumbnail||'',ti=document.getElementById('yt-thumb');
+        if(thumb){ti.src=thumb;ti.style.display='block';}else ti.style.display='none';
+        document.getElementById('yt-info').innerHTML=`<b style="color:#ff4040">Judul:</b> ${xH(d.title||d.data?.title||'Video')}`;
+        const btns=document.getElementById('yt-btns');btns.innerHTML='';
+        const vids=[];
+        if(d.qualities&&Array.isArray(d.qualities))d.qualities.forEach(q=>vids.push({label:q.quality||q.label,url:q.url||q.link}));
+        else if(d.video||d.data?.video)vids.push({label:'VIDEO',url:d.video||d.data.video});
+        if(d.audio||d.data?.audio)vids.push({label:'AUDIO MP3',url:d.audio||d.data.audio,cls:'green'});
+        if(!vids.length)btns.innerHTML='<div style="font-size:.62rem;color:rgba(255,64,64,.6)">Format tidak ditemukan.</div>';
+        else vids.forEach(v=>{if(!v.url)return;const a=document.createElement('a');a.className=`dl-btn ${v.cls||''}`;a.style.borderColor='rgba(255,64,64,.4)';a.style.color='#ff8080';a.href=v.url;a.target='_blank';a.rel='noopener';a.innerHTML=`<i class="fas fa-download"></i>${xH(v.label||'Download')}`;btns.appendChild(a);});
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('yt-url').addEventListener('keypress',e=>{if(e.key==='Enter')doYT();});
+
+window.doWABug=async()=>{
+    const num=document.getElementById('wa-num').value.trim(),type=document.getElementById('wa-type').value,st=document.getElementById('wa-status'),res=document.getElementById('wa-result');
+    if(!num){st.innerHTML='⚠️ Masukkan nomor WA!';return;}
+    st.innerHTML=sp('#00dc50')+' Executing...';res.innerHTML='';
+    try{
+        const r=await fetch(apiURL('wa',`/tools/wabug?number=${encodeURIComponent(num)}&type=${type}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Gagal'}`;return;}
+        st.innerHTML='✅ Berhasil!';res.innerHTML=`Target: <b>${num}</b><br>Type: <b>${type}</b><br>Status: <b style="color:#00ff88">${d.message||'Success'}</b>`;
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+
+window.doAI=async()=>{
+    const inp=document.getElementById('ai-input'),q=inp.value.trim(),st=document.getElementById('ai-status'),msgs=document.getElementById('ai-messages');
+    if(!q)return;inp.value='';
+    const ub=document.createElement('div');ub.style.cssText='background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.2);border-radius:12px 12px 3px 12px;padding:8px 11px;font-size:.72rem;color:#fff;align-self:flex-end;max-width:85%';ub.textContent=q;msgs.appendChild(ub);msgs.scrollTop=msgs.scrollHeight;
+    st.innerHTML=sp()+' Berpikir...';
+    try{
+        const r=await fetch(apiURL('ai',`/ai/openai?prompt=${encodeURIComponent(q)}`));
+        const d=await r.json();
+        const ans=d.result||d.response||d.message||d.data||JSON.stringify(d);
+        const ab=document.createElement('div');ab.style.cssText='background:rgba(255,255,255,.07);border:1px solid rgba(0,242,255,.15);border-radius:12px 12px 12px 3px;padding:8px 11px;font-size:.72rem;color:#fff;align-self:flex-start;max-width:90%;line-height:1.5';
+        ab.innerHTML=xH(ans).replace(/\n/g,'<br>');msgs.appendChild(ab);msgs.scrollTop=msgs.scrollHeight;st.innerHTML='';
+    }catch(e){st.innerHTML=`❌ ${e.message}`;}
+};
+document.getElementById('ai-input').addEventListener('keypress',e=>{if(e.key==='Enter')doAI();});
+
+window.doCekIP=async()=>{
+    const ip=document.getElementById('ip-input').value.trim(),st=document.getElementById('ip-status'),res=document.getElementById('ip-result');
+    st.innerHTML=sp('#00c8ff')+' Fetching...';res.innerHTML='';
+    try{
+        const r=await fetch(ip?`https://ipapi.co/${ip}/json/`:'https://ipapi.co/json/');
+        const d=await r.json();
+        if(d.error){st.innerHTML=`❌ ${d.reason||'IP tidak valid'}`;return;}
+        st.innerHTML='✅ Data ditemukan';
+        res.innerHTML=`🌐 <b>IP:</b> ${d.ip||'-'}<br>📍 <b>Kota:</b> ${d.city||'-'}, ${d.region||'-'}<br>🏳️ <b>Negara:</b> ${d.country_name||'-'}<br>🏢 <b>ISP:</b> ${d.org||'-'}<br>⏰ <b>Timezone:</b> ${d.timezone||'-'}<br>🗺️ <b>Lat/Lon:</b> ${d.latitude||'-'}, ${d.longitude||'-'}`;
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('ip-input').addEventListener('keypress',e=>{if(e.key==='Enter')doCekIP();});
+
+window.doCekNIK=async()=>{
+    const nik=document.getElementById('nik-input').value.trim(),st=document.getElementById('nik-status'),res=document.getElementById('nik-result');
+    if(nik.length!==16){st.innerHTML='⚠️ NIK harus 16 digit!';return;}
+    st.innerHTML=sp('#a060ff')+' Mencari...';res.innerHTML='';
+    try{
+        const r=await fetch(apiURL('nik',`/tools/ceknik?nik=${nik}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Data tidak ditemukan'}`;return;}
+        st.innerHTML='✅ Data ditemukan';const data=d.data||d;
+        res.innerHTML=Object.entries(data).map(([k,v])=>`<b style="color:#a060ff">${k}:</b> ${v}`).join('<br>');
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('nik-input').addEventListener('keypress',e=>{if(e.key==='Enter')doCekNIK();});
+
+window.doPinterest=async()=>{
+    const q=document.getElementById('pin-input').value.trim(),st=document.getElementById('pin-status'),res=document.getElementById('pin-results');
+    if(!q){st.innerHTML='⚠️ Masukkan kata kunci!';return;}
+    st.innerHTML=sp('#e60023')+' Mencari...';res.innerHTML='';
+    try{
+        const r=await fetch(apiURL('pin',`/search/pinterest?q=${encodeURIComponent(q)}`));
+        const d=await r.json();
+        let imgs=d.data||d.results||d.images||[];if(!Array.isArray(imgs))imgs=Object.values(imgs);imgs=imgs.filter(i=>i);
+        if(!imgs.length){st.innerHTML='🔍 Tidak ada hasil.';return;}
+        st.innerHTML=`✅ ${imgs.length} foto`;
+        imgs.slice(0,12).forEach(img=>{const url=typeof img==='string'?img:img.url||img.src||img.image||'';if(!url)return;const i=document.createElement('img');i.className='grid-img';i.src=url;i.loading='lazy';i.onclick=()=>window.open(url,'_blank');res.appendChild(i);});
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('pin-input').addEventListener('keypress',e=>{if(e.key==='Enter')doPinterest();});
+
+window.doSpotify=async()=>{
+    const url=document.getElementById('spot-url').value.trim(),st=document.getElementById('spot-status'),res=document.getElementById('spot-result');
+    if(!url){st.innerHTML='⚠️ Masukkan link Spotify!';return;}
+    st.innerHTML=sp('#1ed760')+' Fetching...';res.style.display='none';
+    try{
+        const r=await fetch(apiURL('spot',`/download/spotify?url=${encodeURIComponent(url)}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Gagal'}`;return;}
+        st.innerHTML='✅ Berhasil!';res.style.display='flex';
+        const thumb=d.thumbnail||d.cover||d.data?.thumbnail||'',ti=document.getElementById('spot-thumb');
+        if(thumb){ti.src=thumb;ti.style.display='block';}else ti.style.display='none';
+        document.getElementById('spot-info').innerHTML=`<b style="color:#1ed760">Judul:</b> ${xH(d.title||d.data?.title||d.name||'Track')}<br><b style="color:#1ed760">Artist:</b> ${xH(d.artist||d.data?.artist||'-')}`;
+        const btns=document.getElementById('spot-btns'),dlUrl=d.download_url||d.url||d.data?.download_url||d.data?.url||'';
+        btns.innerHTML='';if(dlUrl){const a=document.createElement('a');a.className='dl-btn';a.style.borderColor='rgba(30,215,96,.4)';a.style.color='#1ed760';a.href=dlUrl;a.target='_blank';a.rel='noopener';a.innerHTML='<i class="fas fa-download"></i>DOWNLOAD MP3';btns.appendChild(a);}
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('spot-url').addEventListener('keypress',e=>{if(e.key==='Enter')doSpotify();});
+
+window.doTweetGen=async()=>{
+    const topic=document.getElementById('tweet-topic').value.trim(),tone=document.getElementById('tweet-tone').value,st=document.getElementById('tweet-status'),res=document.getElementById('tweet-result');
+    if(!topic){st.innerHTML='⚠️ Masukkan topik dulu!';return;}
+    st.innerHTML=sp('#1da1f2')+' Generating...';res.style.display='none';
+    try{
+        const prompt=`Buat 3 tweet ${tone.toLowerCase()} tentang: ${topic}. Format: nomor. tweet (max 280 karakter). Langsung isi saja.`;
+        const r=await fetch(apiURL('ai',`/ai/openai?prompt=${encodeURIComponent(prompt)}`));
+        const d=await r.json();
+        const ans=d.result||d.response||d.message||d.data||JSON.stringify(d);
+        st.innerHTML='✅ Tweet dibuat!';res.style.display='block';res.innerHTML=xH(ans).replace(/\n/g,'<br>');
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+
+window.doMusicSearch=async()=>{
+    const q=document.getElementById('ms-input').value.trim(),st=document.getElementById('ms-status'),list=document.getElementById('ms-list');
+    if(!q){st.innerHTML='⚠️ Masukkan nama lagu!';return;}
+    st.innerHTML=sp('#a000ff')+' Mencari...';list.innerHTML='';
+    try{
+        const r=await fetch(apiURL('ms',`/search/music?q=${encodeURIComponent(q)}`));
+        const d=await r.json();
+        let tracks=d.data||d.results||d.tracks||[];if(!Array.isArray(tracks))tracks=Object.values(tracks);
+        if(!tracks.length){st.innerHTML='🔍 Tidak ada hasil.';return;}
+        st.innerHTML=`✅ ${tracks.length} lagu`;
+        tracks.slice(0,12).forEach(t=>{
+            const title=t.title||t.name||'Unknown',artist=t.artist||t.author||'-',url=t.url||t.link||t.download_url||'';
+            const el=document.createElement('div');el.style.cssText='display:flex;align-items:center;justify-content:space-between;background:rgba(160,0,255,.07);border:1px solid rgba(160,0,255,.2);border-radius:12px;padding:9px 12px;gap:8px';
+            el.innerHTML=`<div style="overflow:hidden"><div style="font-size:.7rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${xH(title)}</div><div style="font-size:.6rem;color:#a000ff;margin-top:2px">${xH(artist)}</div></div>${url?`<a href="${url}" target="_blank" style="background:rgba(160,0,255,.2);border:1px solid rgba(160,0,255,.4);color:#a000ff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;text-decoration:none;flex-shrink:0"><i class="fas fa-download"></i></a>`:''}`;
+            list.appendChild(el);
+        });
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('ms-input').addEventListener('keypress',e=>{if(e.key==='Enter')doMusicSearch();});
+
+window.doNGLSpam=async()=>{
+    const user=document.getElementById('ngl-user').value.trim(),msg=document.getElementById('ngl-msg').value.trim(),count=Math.min(parseInt(document.getElementById('ngl-count').value)||5,20),st=document.getElementById('ngl-status');
+    if(!user||!msg){st.innerHTML='⚠️ Isi semua field!';return;}
+    st.innerHTML=sp('#c800ff')+` Mengirim 0/${count}...`;let sent=0;
+    for(let i=0;i<count;i++){
+        try{await fetch(apiURL('ngl',`/tools/ngl?username=${encodeURIComponent(user)}&message=${encodeURIComponent(msg)}`));sent++;st.innerHTML=sp('#c800ff')+` Mengirim ${sent}/${count}...`;await new Promise(r=>setTimeout(r,800));}
+        catch(e){break;}
+    }
+    st.innerHTML=`✅ ${sent}/${count} pesan terkirim ke @${user}`;
+};
+
+window.doTGSpam=async()=>{
+    const target=document.getElementById('tg-target').value.trim(),msg=document.getElementById('tg-msg').value.trim(),count=Math.min(parseInt(document.getElementById('tg-count').value)||10,30),st=document.getElementById('tg-status');
+    if(!target||!msg){st.innerHTML='⚠️ Isi semua field!';return;}
+    st.innerHTML=sp('#0088cc')+` Mengirim 0/${count}...`;let sent=0;
+    for(let i=0;i<count;i++){
+        try{await fetch(apiURL('tg',`/tools/tgspam?target=${encodeURIComponent(target)}&message=${encodeURIComponent(msg)}`));sent++;st.innerHTML=sp('#0088cc')+` Mengirim ${sent}/${count}...`;await new Promise(r=>setTimeout(r,600));}
+        catch(e){break;}
+    }
+    st.innerHTML=`✅ ${sent}/${count} pesan terkirim!`;
+};
+
+window.doIPhoneQuoted=async()=>{
+    const name=document.getElementById('iq-name').value.trim(),text=document.getElementById('iq-text').value.trim(),st=document.getElementById('iq-status'),res=document.getElementById('iq-result');
+    if(!name||!text){st.innerHTML='⚠️ Isi nama dan teks!';return;}
+    st.innerHTML=sp()+' Generating...';res.style.display='none';res.innerHTML='';
+    try{
+        const url=apiURL('iq',`/canvas/iqc?name=${encodeURIComponent(name)}&text=${encodeURIComponent(text)}`);
+        const r=await fetch(url);
+        const ctype=r.headers.get('content-type')||'';
+        if(ctype.includes('image')){
+            const blob=await r.blob();
+            const imgUrl=URL.createObjectURL(blob);
+            res.style.display='block';
+            res.innerHTML=`<img src="${imgUrl}" style="width:100%;border-radius:12px;border:1px solid rgba(180,180,200,.2)" onclick="window.open('${imgUrl}','_blank')"><div style="font-size:.6rem;opacity:.45;margin-top:6px;text-align:center">Tap gambar untuk buka full size</div><a href="${imgUrl}" download="iphonequoted.png" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;background:rgba(192,192,208,.12);border:1px solid rgba(192,192,208,.25);color:#c0c0d0;padding:9px;border-radius:11px;font-size:.7rem;text-decoration:none;letter-spacing:1px"><i class="fas fa-download"></i>DOWNLOAD GAMBAR</a>`;
+            st.innerHTML='✅ Berhasil!';
+        }else{
+            const d=await r.json();
+            if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Gagal'}`;return;}
+            const imgUrl=d.result||d.image||d.url||d.output||d.data;
+            if(typeof imgUrl==='string'&&(imgUrl.startsWith('http')||imgUrl.startsWith('data:'))){
+                res.style.display='block';
+                res.innerHTML=`<img src="${imgUrl}" style="width:100%;border-radius:12px;border:1px solid rgba(180,180,200,.2)" onerror="this.style.display='none'"><a href="${imgUrl}" download="iphonequoted.png" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;background:rgba(192,192,208,.12);border:1px solid rgba(192,192,208,.25);color:#c0c0d0;padding:9px;border-radius:11px;font-size:.7rem;text-decoration:none;letter-spacing:1px"><i class="fas fa-download"></i>DOWNLOAD GAMBAR</a>`;
+            }else{
+                res.style.display='block';
+                res.innerHTML=typeof imgUrl==='string'?xH(imgUrl).replace(/\n/g,'<br>'):JSON.stringify(d,null,2);
+            }
+            st.innerHTML='✅ Berhasil!';
+        }
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+
+window.doGetCode=async()=>{
+    const q=document.getElementById('gc-input').value.trim(),st=document.getElementById('gc-status'),res=document.getElementById('gc-result');
+    if(!q){st.innerHTML='⚠️ Masukkan URL atau nama tools!';return;}
+    st.innerHTML=sp('#00ff88')+' Fetching...';res.style.display='none';
+    try{
+        const r=await fetch(apiURL('gc',`/tools/getcode?url=${encodeURIComponent(q)}`));
+        const d=await r.json();
+        if(!r.ok||d.error||d.status===false){st.innerHTML=`❌ ${d.message||'Gagal'}`;return;}
+        st.innerHTML='✅ Code ditemukan!';res.style.display='block';
+        // Set via textContent — tidak bisa di-copy karena protectEl sudah applied
+        res.textContent=d.code||d.result||d.data||JSON.stringify(d,null,2);
+    }catch(e){st.innerHTML=`❌ Error: ${e.message}`;}
+};
+document.getElementById('gc-input').addEventListener('keypress',e=>{if(e.key==='Enter')doGetCode();});
+
+// ── PARTICLES ──
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+window.onresize=()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;};
+const pts=[];
+class P{constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.sz=Math.random()*1.8+.4;this.sx=Math.random()*.5-.25;this.sy=Math.random()*.5-.25;}update(){this.x+=this.sx;this.y+=this.sy;if(this.x>canvas.width)this.x=0;else if(this.x<0)this.x=canvas.width;if(this.y>canvas.height)this.y=0;else if(this.y<0)this.y=canvas.height;}draw(){ctx.fillStyle='rgba(0,242,255,.7)';ctx.beginPath();ctx.arc(this.x,this.y,this.sz,0,Math.PI*2);ctx.fill();}}
+for(let i=0;i<55;i++)pts.push(new P());
+function render(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.update();p.draw();pts.forEach(p2=>{const d=Math.hypot(p.x-p2.x,p.y-p2.y);if(d<100){ctx.strokeStyle=`rgba(0,242,255,${(1-d/100)*.4})`;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();}});});requestAnimationFrame(render);}
+render();
+</script>
+</body>
+</html>
